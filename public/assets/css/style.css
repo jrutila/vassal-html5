@@ -7,8 +7,6 @@ a {
 }
 div.piece {
   position: absolute;
-  top: 100px;
-  left: 100px;
   background-color: #00f;
   z-index: 1000;
 }

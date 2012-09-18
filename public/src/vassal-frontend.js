@@ -39,8 +39,61 @@ jQuery(function($) {
       model: p
     });
     pv.render();
+    p = new Piece.Piece({
+      parameters: { name: 'SU 2 Shock' }
+    });
+    pv = new Piece.PieceView({
+      model: p
+    });
+    pv.render();
 });
 
+
 var Slot = Backbone.Model.extend({
-  defaults: { parameters: {} }
+  defaults: {
+    parameters: {},
+  },
+  initialize: function() {
+    var Piece = vassal.module('piece');
+    this.set('pieces', new Piece.PieceCollection());
+  },
+});
+
+var SlotView = Backbone.View.extend({
+  _viewPointers: {},
+  initialize: function() {
+    this.model.get('pieces').on('add', this.renderPieces, this);
+  },
+  events: {
+  'dragover': 'dragOver',
+  'drop': 'drop',
+  },
+  renderPieces: function(el, rel) {
+    var vp = this._viewPointers;
+    var offset = this.$el.offset();
+    this.model.get('pieces').each(function(piece) {
+      offset.left += 5;
+      offset.top += 5;
+      vp[piece.cid].$el.offset(offset);
+    });
+  },
+  dragOver: function(e) {
+    var ev = e.originalEvent;
+    if (ev.preventDefault) {
+      ev.preventDefault();
+    }
+    ev.dataTransfer.dropEffect = 'move';
+
+    return false;
+  },
+  drop: function(e) {
+    var ev = e.originalEvent;
+    if (ev.stopPropagation) {
+      ev.stopPropagation();
+    }
+    var draggedModel = draggedView.model;
+    this._viewPointers[draggedModel.cid] = draggedView;
+    draggedModel.move(this.model);
+    return false;
+  },
 });

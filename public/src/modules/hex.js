@@ -18,28 +18,20 @@
       }
     });
 
-    Hex.HexView = Backbone.View.extend({
+    Hex.HexView = SlotView.extend({
       tagName: 'div',
       className: 'slot hex',
-      events: {
-        'drop': 'dropPiece'
-      },
       render: function() {
+      	console.log('rendering!');
         this.$el.html('XXX');
         this.$el.width(HT.Hexagon.Static.SIDE);
-        this.$el.height(HT.Hexagon.Static.HEIGHT);
+        this.$el.height(HT.Hexagon.Static.HEIGHT/2);
         this.$el.offset({
-          top: this.options['hexgrid'].offset_y + (this.model.get('y')-1)*HT.Hexagon.Static.HEIGHT+(HT.Hexagon.Static.HEIGHT/2)*((this.model.get('x')+1)%2),
+          top: this.options['hexgrid'].offset_y + (this.model.get('y')-1)*HT.Hexagon.Static.HEIGHT+(HT.Hexagon.Static.HEIGHT/2)*((this.model.get('x')+1)%2) + HT.Hexagon.Static.HEIGHT/4,
           left: this.options['hexgrid'].offset_x +(Math.floor(this.model.get('x')/2))*HT.Hexagon.Static.WIDTH + (Math.floor((this.model.get('x')-1)/2))*HT.Hexagon.Static.SIDE + (this.model.get('x')%2)*(HT.Hexagon.Static.WIDTH/2-HT.Hexagon.Static.SIDE/2)
         });
         $('body').append(this.$el);
       },
-      dropPiece: function(e) {
-        if (e.stopPropagation) {
-          e.stopPropagation();
-        }
-        return false;
-      }
     });
 
     Hex.HexGridView = Backbone.View.extend({
