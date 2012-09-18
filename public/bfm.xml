@@ -1,0 +1,286 @@
+<mapbox>
+  <enum id="setup">
+    <item>none</item>
+    <item>DE</item>
+    <item>SU</item>
+  </enum>
+
+  <enum id="terrain">
+    <item>clear</item>
+    <item>forest</item>
+    <item>city</item>
+    <item>Moscow</item>
+  </enum>
+
+  <map>
+    <hexgrid xaxis="0" yaxis="-90" xmin="1" ymin="1" xmax="16" ymax="10" up="true">
+      <hex x="1" y="3">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="1" y="4">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="1" y="6">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="1" y="7">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+
+      <hex x="2" y="1">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="2" y="2">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="2" y="3">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="2" y="4">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Smolensk"/>
+      </hex>
+      <hex x="2" y="5">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="2" y="6">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="2" y="7">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="2" y="8">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="2" y="9">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="2" y="10">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+
+      <hex x="3" y="1">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="3" y="2">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+      </hex>
+      <hex x="3" y="3">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+      </hex>
+      <hex x="3" y="4">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+      </hex>
+      <hex x="3" y="5">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="3" y="6">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="3" y="7">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Roslavl"/>
+      </hex>
+      <hex x="3" y="8">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="3" y="9">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="3" y="10">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+
+      <hex x="4" y="1">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="4" y="5">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="4" y="6">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="4" y="7">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+      <hex x="4" y="8">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="4" y="9">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="4" y="10">
+        <enumProperty name="setup" enum="setup" value="DE"/>
+      </hex>
+
+      <hex x="5" y="1">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="5" y="2">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="5" y="3">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="5" y="4">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="5" y="5">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="5" y="6">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="5" y="7">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="5" y="8">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+      </hex>
+      <hex x="5" y="9">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Bryansk"/>
+      </hex>
+      <hex x="5" y="10">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+
+      <hex x="6" y="1">
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Rzhev"/>
+      </hex>
+      <hex x="6" y="3">
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Vyazma"/>
+      </hex>
+      <hex x="6" y="4">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+
+      <hex x="7" y="1">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="7" y="2">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="7" y="3">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="7" y="4">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="7" y="8">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+
+      <hex x="8" y="1">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="8" y="2">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="8" y="3">
+        <enumProperty name="setup" enum="setup" value="SU"/>
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Mozhaisk"/>
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="8" y="4">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="8" y="5">
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Kaluga"/>
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="8" y="6">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="8" y="9">
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Orel"/>
+      </hex>
+
+      <hex x="9" y="1">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="9" y="2">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="9" y="5">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="9" y="6">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+
+      <hex x="10" y="1">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="10" y="2">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="10" y="3">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="10" y="4">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+
+      <hex x="11" y="2">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="11" y="3">
+        <enumProperty name="terrain" enum="terrain" value="Moscow"/>
+        <stringProperty name="city" value="Moscow"/>
+      </hex>
+      <hex x="11" y="4">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="11" y="5">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="11" y="6">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      <hex x="11" y="7">
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Tula"/>
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+
+      <hex x="12" y="1">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="12" y="3">
+        <boolProperty name="defensive zone" value="true"/>
+      </hex>
+      
+      <hex x="13" y="3">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+
+      <hex x="14" y="4">
+        <enumProperty name="terrain" enum="terrain" value="forest"/>
+      </hex>
+      <hex x="14" y="5">
+        <enumProperty name="terrain" enum="terrain" value="city"/>
+        <stringProperty name="city" value="Ryazan"/>
+      </hex>
+    </hexgrid>
+  </map>
+</mapbox>

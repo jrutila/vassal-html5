@@ -1,0 +1,19 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+  color: #00b7ff;
+}
+div.piece {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  background-color: #00f;
+  z-index: 1000;
+}
+div.slot.hex {
+  position: absolute;
+  background-color: #808080;
+  opacity: 0.2;
+}
