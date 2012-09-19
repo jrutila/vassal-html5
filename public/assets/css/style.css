@@ -9,9 +9,12 @@ div.piece {
   position: absolute;
   background-color: #00f;
   z-index: 1000;
+  width: 30px;
+  height: 30px;
+  z-index: 1000;
 }
 div.slot.hex {
   position: absolute;
   background-color: #808080;
-  opacity: 0.2;
+  z-index: 900;
 }

@@ -23,7 +23,6 @@
       className: 'slot hex',
       render: function() {
       	console.log('rendering!');
-        this.$el.html('XXX');
         this.$el.width(HT.Hexagon.Static.SIDE);
         this.$el.height(HT.Hexagon.Static.HEIGHT/2);
         this.$el.offset({

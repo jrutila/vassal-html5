@@ -24,6 +24,9 @@
     events: {
       "dragstart": 'dragStart',
       "dragend": 'dragEnd',
+      'click': 'show_info',
+    },
+    initialize: function() {
     },
     render: function() {
       this.$el.html(this.model.get('parameters')['name']);
@@ -34,11 +37,34 @@
       console.log('dstart');
       this.el.style.opacity = '0.7';
       ev.dataTransfer.effectAllowed = 'move';
-      ev.dataTransfer.setData("application/x-moz-node", this.el);
       draggedView = this;
     },
     dragEnd: function(e) {
       var ev = e.originalEvent;
+      this.el.style.opacity = '1.0';
+    },
+    show_info: function(e) {
+      if (this.get('info_view') == undefined)
+      {
+        this.set('info_view', new PieceInfo({
+          model: this.model
+        }));
+        this.get('info_view').render();
+      }
+      //this.get('info_view').show();
+    },
+  });
+
+  Piece.PieceInfo = Backbone.View.extend({
+    tagName: 'div',
+    className: 'piece_info',
+    render: function() {
+     // TODO: template 
+     this.$el.prependTo('body');
+     for (var h in this.model.get('parameters'))
+     {
+      this.$el.append('<div>'+h+'</div>');
+     }
     },
   });
 })(vassal.module('piece'));

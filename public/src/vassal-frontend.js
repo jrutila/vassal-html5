@@ -61,8 +61,11 @@ var Slot = Backbone.Model.extend({
 
 var SlotView = Backbone.View.extend({
   _viewPointers: {},
+  defaults: {
+    allow_stacking: true,
+  },
   initialize: function() {
-    this.model.get('pieces').on('add', this.renderPieces, this);
+    this.model.get('pieces').on('add remove', this.renderPieces, this);
   },
   events: {
   'dragover': 'dragOver',
@@ -71,14 +74,19 @@ var SlotView = Backbone.View.extend({
   renderPieces: function(el, rel) {
     var vp = this._viewPointers;
     var offset = this.$el.offset();
+    var $slot = this.$el;
     this.model.get('pieces').each(function(piece) {
+      vp[piece.cid].$el.appendTo($slot);
       offset.left += 5;
       offset.top += 5;
       vp[piece.cid].$el.offset(offset);
     });
   },
   dragOver: function(e) {
+    console.log('over');
     var ev = e.originalEvent;
+    if (! this.model.get('allow_stacking') && this.model.get('pieces').size() > 0)
+      return true;
     if (ev.preventDefault) {
       ev.preventDefault();
     }
