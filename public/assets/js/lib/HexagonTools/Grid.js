@@ -5,11 +5,15 @@
 HT.Grid = function(/*double*/ width, /*double*/ height) {
 	
 	this.Hexes = [];
+	this.Vertices = [];
+	this.Sides = [];
 	//setup a dictionary for use later for assigning the X or Y CoOrd (depending on Orientation)
 	var HexagonsByXOrYCoOrd = {}; //Dictionary<int, List<Hexagon>>
 
 	var row = 0;
 	var y = 0.0;
+	var vertices = {}
+	var sides = {}
 	while (y + HT.Hexagon.Static.HEIGHT <= height)
 	{
 		var col = 0;
@@ -39,6 +43,36 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 			}
 			
 			this.Hexes.push(h);
+			for (var p in h.Points)
+			{
+			  var xplus = 0;
+			  var yplus = 0;
+			  vertices[h.Points[p].X + "," + h.Points[p].Y] = h.Points[p];
+			  switch(p)
+			  {
+			    case "5":
+			      yplus -= HT.Hexagon.Static.HEIGHT/2;
+			    case "4":
+			      xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			      yplus -= HT.Hexagon.Static.HEIGHT/4;
+			    case "3":
+			      xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			      yplus += HT.Hexagon.Static.HEIGHT/4;
+			    case "2":
+			      yplus += HT.Hexagon.Static.HEIGHT/2;
+			    case "1":
+			      xplus += HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			      yplus += HT.Hexagon.Static.HEIGHT/4;
+			    case "0":
+			      xplus += HT.Hexagon.Static.SIDE/2;
+			  }
+			  var point = new HT.Point(h.Points[0].X + xplus, h.Points[0].Y + yplus);
+			  var start = h.Points[p];
+			  var end = h.Points[parseInt(p)+1];
+			  if (end == undefined)
+			    end = h.Points[0];
+			  sides[start.X + "," + start.Y+","+end.X+","+end.Y] = point;
+			}
 			
 			if (!HexagonsByXOrYCoOrd[pathCoOrd])
 				HexagonsByXOrYCoOrd[pathCoOrd] = [];
@@ -56,6 +90,10 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 		else
 			y += (HT.Hexagon.Static.HEIGHT - HT.Hexagon.Static.SIDE)/2 + HT.Hexagon.Static.SIDE;
 	}
+	for (var v in vertices)
+	  this.Vertices.push(vertices[v]);
+	for (var s in sides)
+	  this.Sides.push(sides[s]);
 
 	//finally go through our list of hexagons by their x co-ordinate to assign the y co-ordinate
 	for (var coOrd1 in HexagonsByXOrYCoOrd)

@@ -37,11 +37,16 @@
       console.log('dstart');
       this.el.style.opacity = '0.7';
       ev.dataTransfer.effectAllowed = 'move';
+      var dragImg = document.createElement('img');
+      ev.dataTransfer.setDragImage(dragImg, 0, 0);
+      this.orig_offset = this.$el.offset();
       draggedView = this;
     },
     dragEnd: function(e) {
       var ev = e.originalEvent;
-      this.el.style.opacity = '1.0';
+      if (draggedView.enddrag != undefined)
+        draggedView.enddrag(e);
+      //this.$el.offset(this.orig_offset);
     },
     show_info: function(e) {
       if (this.get('info_view') == undefined)

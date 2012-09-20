@@ -1,10 +1,18 @@
 (function(Hex) {
     Hex.Hex = Slot.extend({
     });
+    Hex.Vertex = Slot.extend({
+    });
+    Hex.Side = Slot.extend({
+    });
+
     Hex.HexGrid = Backbone.Collection.extend({
       hexiter: 0,
       model: Hex,
-
+      initialize: function(models, options) {
+        this.xmax = options.xmax;
+        this.ymax = options.ymax;
+      },
       getNextHex: function(x, y) {
         if (this.hexiter == -1)
           this.hexiter = 0;
@@ -26,8 +34,40 @@
         this.$el.width(HT.Hexagon.Static.SIDE);
         this.$el.height(HT.Hexagon.Static.HEIGHT/2);
         this.$el.offset({
-          top: this.options['hexgrid'].offset_y + (this.model.get('y')-1)*HT.Hexagon.Static.HEIGHT+(HT.Hexagon.Static.HEIGHT/2)*((this.model.get('x')+1)%2) + HT.Hexagon.Static.HEIGHT/4,
-          left: this.options['hexgrid'].offset_x +(Math.floor(this.model.get('x')/2))*HT.Hexagon.Static.WIDTH + (Math.floor((this.model.get('x')-1)/2))*HT.Hexagon.Static.SIDE + (this.model.get('x')%2)*(HT.Hexagon.Static.WIDTH/2-HT.Hexagon.Static.SIDE/2)
+          //top: this.options['hexgrid'].offset_y + (this.model.get('y')-1)*HT.Hexagon.Static.HEIGHT+(HT.Hexagon.Static.HEIGHT/2)*((this.model.get('x')+1)%2) + HT.Hexagon.Static.HEIGHT/4,
+          //left: this.options['hexgrid'].offset_x +(Math.floor(this.model.get('x')/2))*HT.Hexagon.Static.WIDTH + (Math.floor((this.model.get('x')-1)/2))*HT.Hexagon.Static.SIDE + (this.model.get('x')%2)*(HT.Hexagon.Static.WIDTH/2-HT.Hexagon.Static.SIDE/2)
+          top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/4,
+          left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/4,
+        });
+        $('body').append(this.$el);
+      },
+    });
+
+    Hex.VertexView = SlotView.extend({
+      tagName: 'div',
+      className: 'slot vertex',
+      render: function() {
+      	console.log('rendering vertex!');
+        this.$el.width(HT.Hexagon.Static.WIDTH/4);
+        this.$el.height(HT.Hexagon.Static.HEIGHT/4);
+        this.$el.offset({
+          top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
+          left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
+        });
+        $('body').append(this.$el);
+      },
+    });
+
+    Hex.SideView = SlotView.extend({
+      tagName: 'div',
+      className: 'slot side',
+      render: function() {
+      	console.log('rendering side!');
+        this.$el.width(HT.Hexagon.Static.WIDTH/4);
+        this.$el.height(HT.Hexagon.Static.HEIGHT/4);
+        this.$el.offset({
+          top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
+          left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
         });
         $('body').append(this.$el);
       },
@@ -39,13 +79,19 @@
         this.offset_y = this.$el.position().top;
       },
       render: function() {
-        HT.Hexagon.Static.WIDTH = 88;
-        HT.Hexagon.Static.HEIGHT = 76;
-        HT.Hexagon.Static.SIDE = 44;
-        var grid = new HT.Grid(1080,800);
+        var ratio = 0.5;
+        var x = this.model.xmax;
+        var y = this.model.ymax;
+        var width = this.$el.width();
+        var height = this.$el.height();
+        HT.Hexagon.Static.WIDTH = Math.floor(width/(x/2+ratio*((x+1)/2)));
+        HT.Hexagon.Static.HEIGHT = Math.floor(height/(y+0.5));
+        HT.Hexagon.Static.SIDE = HT.Hexagon.Static.WIDTH*ratio;
+        //HT.Hexagon.Static.SIDE =0;
+        var grid = new HT.Grid(this.$el.width(),this.$el.height());
         var ctx = this.el.getContext('2d');
         var img = new Image();
-        var gridd = this.options['grid'];
+        var gridd = this.model;
         var hexgrid = this;
         gridd.models.sort(function(a,b) {
           var n = a.get('y') - b.get('y');
@@ -91,9 +137,26 @@
             });
             var hv = new Hex.HexView({
               model: hexx,
+              point: hex.MidPoint,
               hexgrid: hexgrid
             });
             hv.render();
+          }
+          for (var v in grid.Vertices) {
+            var vv = new Hex.VertexView({
+              model: new Hex.Vertex(),
+              point: grid.Vertices[v],
+              hexgrid: hexgrid
+            });
+            vv.render();
+          }
+          for (var v in grid.Sides) {
+            var sv = new Hex.SideView({
+              model: new Hex.Side(),
+              point: grid.Sides[v],
+              hexgrid: hexgrid
+            });
+            sv.render();
           }
         }
         img.src = 'images/backdrop.png';

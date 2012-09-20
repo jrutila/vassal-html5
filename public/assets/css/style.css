@@ -13,8 +13,7 @@ div.piece {
   height: 30px;
   z-index: 1000;
 }
-div.slot.hex {
+div.slot {
   position: absolute;
-  background-color: #808080;
   z-index: 900;
 }

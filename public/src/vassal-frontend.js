@@ -14,9 +14,11 @@ var vassal = {
 
 jQuery(function($) {
     $.get('bfm.xml', {}, function(xml) {
-      console.log(xml);
       var Hex = vassal.module('hex');
-      var grid = new Hex.HexGrid();
+      var grid = new Hex.HexGrid([], {
+        xmax: parseInt($('hexgrid', xml).attr('xmax')),
+        ymax: parseInt($('hexgrid', xml).attr('ymax'))
+      });
       $('hexgrid hex', xml).each(function() {
         var params = {};
         $("*", this).each(function() {
@@ -26,7 +28,7 @@ jQuery(function($) {
       });
       var hex_view = new Hex.HexGridView({
         el: $('#hexCanvas'),
-        grid: grid
+        model: grid
       });
       hex_view.render();
     });
@@ -76,10 +78,11 @@ var SlotView = Backbone.View.extend({
     var offset = this.$el.offset();
     var $slot = this.$el;
     this.model.get('pieces').each(function(piece) {
-      vp[piece.cid].$el.appendTo($slot);
-      offset.left += 5;
-      offset.top += 5;
-      vp[piece.cid].$el.offset(offset);
+      var $piece = vp[piece.cid].$el;
+      $piece.appendTo($slot);
+      offset.left += $slot.width()/2 - $piece.width()/2;
+      offset.top += $slot.height()/2 - $piece.height()/2;
+      $piece.offset(offset);
     });
   },
   dragOver: function(e) {
@@ -90,11 +93,15 @@ var SlotView = Backbone.View.extend({
     if (ev.preventDefault) {
       ev.preventDefault();
     }
+    draggedView.$el.offset(this.$el.offset());
     ev.dataTransfer.dropEffect = 'move';
+    var thview = this;
+    draggedView.enddrag = function(e) { thview.drop(e); };
 
     return false;
   },
   drop: function(e) {
+    console.log('drop');
     var ev = e.originalEvent;
     if (ev.stopPropagation) {
       ev.stopPropagation();
