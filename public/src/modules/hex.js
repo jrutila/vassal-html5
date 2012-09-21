@@ -1,5 +1,6 @@
 (function(Hex) {
     var Slot = vassal.module('slot');
+    var Map = vassal.module('map');
     Hex.Hex = Slot.Slot.extend({
     });
     Hex.Vertex = Slot.Slot.extend({
@@ -7,15 +8,11 @@
     Hex.Side = Slot.Slot.extend({
     });
 
-    Hex.HexGrid = Backbone.Collection.extend({
+    Hex.HexTile = Map.MapTile.extend({
+    });
+
+    Hex.HexGrid = Map.Map.extend({
       hexiter: 0,
-      model: Hex,
-      initialize: function(models, options) {
-        this.xmax = options.xmax;
-        this.ymax = options.ymax;
-        this.orientation = options.orientation;
-        this.cut = options.cut;
-      },
       getNextHex: function(x, y) {
         if (this.hexiter == -1)
           this.hexiter = 0;
@@ -76,33 +73,53 @@
       },
     });
 
+    Hex.HexTileView = Backbone.View.extend({
+      tagName: "img",
+      className: "maptile",
+      events: {
+        "click": "assign",
+      },
+      render: function() {
+        this.$el.attr("src", "http://www.mayfairgames.com/support/pics/jungle-l.gif");
+        this.$el.width(this.options.settings.WIDTH);
+        this.$el.height(this.options.settings.HEIGHT);
+        this.$el.appendTo("body");
+      },
+      draw: function() {
+          var img = new Image();
+          var hex = this.options.hex;
+          if (_.isFunction(hex))
+            hex = hex();
+          var model = this.model;
+          var ctx = this.options.ctx;
+          this.$el.hide();
+          img.onload = function() {
+            ctx.drawImage(img, hex.TopLeftPoint.X, hex.TopLeftPoint.Y, hex.settings.WIDTH, hex.settings.HEIGHT);
+            ctx.fillText('terrain = '+model.get('properties').get('terrain'), hex.MidPoint.X, hex.MidPoint.Y+30);
+          };
+          img.src = this.$el.attr('src');
+      },
+      assign: function(e) {
+        this.model.set('x', 3);
+        this.model.set('y', 3);
+        this.draw();
+      },
+    });
+
     Hex.HexGridView = Backbone.View.extend({
       initialize: function() {
         this.offset_x = this.$el.position().left;
         this.offset_y = this.$el.position().top;
       },
       render: function() {
-        var ratio = 0.5;
-        var x = this.model.xmax;
-        var y = this.model.ymax;
-        var width = this.$el.width();
-        var height = this.$el.height();
-        if (this.model.orientation == 'rotated')
-        {
-          HT.Hexagon.Static.WIDTH = Math.floor(width/x);
-          HT.Hexagon.Static.HEIGHT = Math.floor(height/(y/2+ratio*((y+1+y%2)/2)));
-          HT.Hexagon.Static.SIDE = HT.Hexagon.Static.WIDTH*ratio;
-          HT.Hexagon.Static.ORIENTATION = HT.Hexagon.Static.Rotated;
-        } else {
-          HT.Hexagon.Static.WIDTH = Math.floor(width/(x/2+ratio*((x+1+x%2)/2)));
-          HT.Hexagon.Static.HEIGHT = Math.floor(height/(y+0.5));
-          HT.Hexagon.Static.SIDE = HT.Hexagon.Static.WIDTH*ratio;
-        }
-        var grid = new HT.Grid(this.$el.width(),this.$el.height());
+        var orie = HT.Hexagon.Orientation.Normal;
+        if (this.model.get('orientation') == "rotated")
+          orie = HT.Hexagon.Orientation.Rotated;
+        var grid = new HT.Grid(this.$el.width(),this.$el.height(), this.model.get('xmax'), this.model.get('ymax'), orie, this.model.get('cut'));
         var ctx = this.el.getContext('2d');
-        var img = new Image();
         var gridd = this.model;
         var hexgrid = this;
+        /*
         gridd.models.sort(function(a,b) {
           var n = a.get('y') - b.get('y');
           if (n != 0)
@@ -115,12 +132,39 @@
             return 1;
           return ax-bx;
         });
+        */
 
+        var tempsettings;
         for (var h in grid.Hexes) {
           var hex = grid.Hexes[h];
-          if (this.model.cut.indexOf(hex.PathCoOrdX+","+hex.PathCoOrdY) == -1)
           hex.draw(ctx);
+          var hextile = this.model.get('tiles').find(function(data) { return data.get('x') == hex.GridX && data.get('y') == hex.GridY; });
+          if (hextile)
+          {
+            var tv = new Hex.HexTileView({
+              model: hextile,
+              hex: hex,
+              settings: hex.settings,
+              ctx: ctx,
+            });
+            tv.render();
+            tv.draw(ctx, hex.MidPoint);
+          }
+          tempsettings = hex.settings;
         }
+        this.model.get('tiles').each(function(tile) 
+        {
+          if (tile.get('x') == undefined || tile.get('y') == undefined)
+          {
+            var tv = new Hex.HexTileView({
+              model: tile,
+              hex: function() { return grid.GetHex(tile.get('x'), tile.get('y')) },
+              settings: tempsettings,
+              ctx: ctx,
+            });
+            tv.render();
+          }
+        });
         /*
           var act_x = hex.PathCoOrdX+1;
           var act_y = (hex.PathCoOrdY - Math.floor(hex.PathCoOrdX/2))+((hex.PathCoOrdX+1)%2);

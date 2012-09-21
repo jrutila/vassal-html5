@@ -34,28 +34,28 @@ HT.Line = function(x1, y1, x2, y2) {
  * A Hexagon is a 6 sided polygon, our hexes don't have to be symmetrical, i.e. ratio of width to height could be 4 to 3
  * @constructor
  */
-HT.Hexagon = function(id, x, y) {
+HT.Hexagon = function(id, x, y, settings) {
 	this.Points = [];//Polygon Base
 	var x1 = null;
 	var y1 = null;
-	if(HT.Hexagon.Static.ORIENTATION == HT.Hexagon.Orientation.Normal) {
-		x1 = (HT.Hexagon.Static.WIDTH - HT.Hexagon.Static.SIDE)/2;
-		y1 = (HT.Hexagon.Static.HEIGHT / 2);
+	if(settings.ORIENTATION == HT.Hexagon.Orientation.Normal) {
+		x1 = (settings.WIDTH - settings.SIDE)/2;
+		y1 = (settings.HEIGHT / 2);
 		this.Points.push(new HT.Point(x1 + x, y));
-		this.Points.push(new HT.Point(x1 + HT.Hexagon.Static.SIDE + x, y));
-		this.Points.push(new HT.Point(HT.Hexagon.Static.WIDTH + x, y1 + y));
-		this.Points.push(new HT.Point(x1 + HT.Hexagon.Static.SIDE + x, HT.Hexagon.Static.HEIGHT + y));
-		this.Points.push(new HT.Point(x1 + x, HT.Hexagon.Static.HEIGHT + y));
+		this.Points.push(new HT.Point(x1 + settings.SIDE + x, y));
+		this.Points.push(new HT.Point(settings.WIDTH + x, y1 + y));
+		this.Points.push(new HT.Point(x1 + settings.SIDE + x, settings.HEIGHT + y));
+		this.Points.push(new HT.Point(x1 + x, settings.HEIGHT + y));
 		this.Points.push(new HT.Point(x, y1 + y));
 	}
 	else {
-		x1 = (HT.Hexagon.Static.WIDTH / 2);
-		y1 = (HT.Hexagon.Static.HEIGHT - HT.Hexagon.Static.SIDE)/2;
+		x1 = (settings.WIDTH / 2);
+		y1 = (settings.HEIGHT - settings.SIDE)/2;
 		this.Points.push(new HT.Point(x1 + x, y));
-		this.Points.push(new HT.Point(HT.Hexagon.Static.WIDTH + x, y1 + y));
-		this.Points.push(new HT.Point(HT.Hexagon.Static.WIDTH + x, y1 + HT.Hexagon.Static.SIDE + y));
-		this.Points.push(new HT.Point(x1 + x, HT.Hexagon.Static.HEIGHT + y));
-		this.Points.push(new HT.Point(x, y1 + HT.Hexagon.Static.SIDE + y));
+		this.Points.push(new HT.Point(settings.WIDTH + x, y1 + y));
+		this.Points.push(new HT.Point(settings.WIDTH + x, y1 + settings.SIDE + y));
+		this.Points.push(new HT.Point(x1 + x, settings.HEIGHT + y));
+		this.Points.push(new HT.Point(x, y1 + settings.SIDE + y));
 		this.Points.push(new HT.Point(x, y1 + y));
 	}
 	
@@ -67,10 +67,11 @@ HT.Hexagon = function(id, x, y) {
 	this.y1 = y1;
 	
 	this.TopLeftPoint = new HT.Point(this.x, this.y);
-	this.BottomRightPoint = new HT.Point(this.x + HT.Hexagon.Static.WIDTH, this.y + HT.Hexagon.Static.HEIGHT);
-	this.MidPoint = new HT.Point(this.x + (HT.Hexagon.Static.WIDTH / 2), this.y + (HT.Hexagon.Static.HEIGHT / 2));
+	this.BottomRightPoint = new HT.Point(this.x + settings.WIDTH, this.y + settings.HEIGHT);
+	this.MidPoint = new HT.Point(this.x + (settings.WIDTH / 2), this.y + (settings.HEIGHT / 2));
 	
 	this.P1 = new HT.Point(x + x1, y + y1);
+	this.settings = settings;
 	
 	this.selected = false;
 };
@@ -215,4 +216,9 @@ HT.Hexagon.Static = {HEIGHT:91.14378277661477
 					, ORIENTATION:HT.Hexagon.Orientation.Normal
 					, DRAWSTATS: false};//hexagons will have 25 unit sides for now
 
-
+HT.Hexagon.Settings = function() {
+  this.HEIGHT = 0;
+  this.WIDTH = 0;
+  this.SIDE = 0;
+  this.ORIENTATION = 0;
+};

@@ -12,6 +12,9 @@ var vassal = {
   }()
 };
 
+Properties = Backbone.Model.extend({
+});
+
 jQuery(function($) {
     /*
     $.get('bfm.xml', {}, function(xml) {
@@ -35,7 +38,7 @@ jQuery(function($) {
     });
     */
     var Hex = vassal.module('hex');
-    var grid = new Hex.HexGrid([], {
+    var grid = new Hex.HexGrid({
       xmax: 8,
       ymax: 7,
       orientation: "rotated",
@@ -46,6 +49,24 @@ jQuery(function($) {
         "10,6", "9,6", "9,5", "9,4"
       ]
     });
+    var tile = new Hex.HexTile({
+      x: 2,
+      y: 0,
+      properties: new Properties({
+        terrain: "wood",
+      }),
+    });
+    grid.get('tiles').add(tile);
+    grid.get('tiles').add(new Hex.HexTile({
+      properties: new Properties({
+        terrain: "wood",
+      }),
+    }));
+    grid.get('tiles').add(new Hex.HexTile({
+      properties: new Properties({
+        terrain: "wood",
+      }),
+    }));
     var grid_view = new Hex.HexGridView({
       el: $('#hexCanvas'),
       model: grid,

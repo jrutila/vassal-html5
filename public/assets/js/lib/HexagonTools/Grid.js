@@ -2,7 +2,7 @@
  * A Grid is the model of the playfield containing hexes
  * @constructor
  */
-HT.Grid = function(/*double*/ width, /*double*/ height) {
+HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, orientation, cut) {
 	
 	this.Hexes = [];
 	this.Vertices = [];
@@ -12,9 +12,35 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 
 	var row = 0;
 	var y = 0.0;
-	var vertices = {}
-	var sides = {}
-	while (y + HT.Hexagon.Static.HEIGHT <= height)
+	var vertices = {};
+	var sides = {};
+	var hexes = [];
+        var ratio = 0.5;
+        var x = xmax;
+        var y = ymax;
+        var settings = new HT.Hexagon.Settings();
+        if (orientation == HT.Hexagon.Orientation.Rotated)
+        {
+          WIDTH = Math.floor(width/x);
+          HEIGHT = Math.floor(height/(y/2+ratio*((y+1+y%2)/2)));
+          SIDE = HEIGHT*ratio;
+          ORIENTATION = HT.Hexagon.Orientation.Rotated;
+        } else {
+          WIDTH = Math.floor(width/(x/2+ratio*((x+1+x%2)/2)));
+          HEIGHT = Math.floor(height/(y+0.5));
+          SIDE = WIDTH*ratio;
+          ORIENTATION = HT.Hexagon.Orientation.Normal;
+        }
+
+        HT.Hexagon.Static.HEIGHT = HEIGHT;
+        HT.Hexagon.Static.WIDTH = WIDTH;
+        HT.Hexagon.Static.SIDE = SIDE;
+        HT.Hexagon.Static.ORIENTATION = ORIENTATION;
+        settings.HEIGHT = HEIGHT;
+        settings.WIDTH = WIDTH;
+        settings.ORIENTATION = ORIENTATION
+        settings.SIDE = SIDE;
+	while (y + HEIGHT <= height)
 	{
 		var col = 0;
 
@@ -32,7 +58,7 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 		while (x + HT.Hexagon.Static.WIDTH <= width)
 		{
 		    var hexId = this.GetHexId(row, col);
-			var h = new HT.Hexagon(hexId, x, y);
+			var h = new HT.Hexagon(hexId, x, y, settings);
 			
 			var pathCoOrd = col;
 			if(HT.Hexagon.Static.ORIENTATION == HT.Hexagon.Orientation.Normal)
@@ -42,7 +68,7 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 				pathCoOrd = row;
 			}
 			
-			this.Hexes.push(h);
+			hexes.push(h);
 			for (var p in h.Points)
 			{
 			  var xplus = 0;
@@ -51,18 +77,18 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 			  switch(p)
 			  {
 			    case "5":
-			      yplus -= HT.Hexagon.Static.HEIGHT/2;
+			      yplus -= HEIGHT/2;
 			    case "4":
 			      xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
-			      yplus -= HT.Hexagon.Static.HEIGHT/4;
+			      yplus -= HEIGHT/4;
 			    case "3":
 			      xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
-			      yplus += HT.Hexagon.Static.HEIGHT/4;
+			      yplus += HEIGHT/4;
 			    case "2":
-			      yplus += HT.Hexagon.Static.HEIGHT/2;
+			      yplus += HEIGHT/2;
 			    case "1":
 			      xplus += HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
-			      yplus += HT.Hexagon.Static.HEIGHT/4;
+			      yplus += HEIGHT/4;
 			    case "0":
 			      xplus += HT.Hexagon.Static.SIDE/2;
 			  }
@@ -86,14 +112,10 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 		}
 		row++;
 		if(HT.Hexagon.Static.ORIENTATION == HT.Hexagon.Orientation.Normal)
-			y += HT.Hexagon.Static.HEIGHT / 2;
+			y += HEIGHT / 2;
 		else
-			y += (HT.Hexagon.Static.HEIGHT - HT.Hexagon.Static.SIDE)/2 + HT.Hexagon.Static.SIDE;
+			y += (HEIGHT - HT.Hexagon.Static.SIDE)/2 + HT.Hexagon.Static.SIDE;
 	}
-	for (var v in vertices)
-	  this.Vertices.push(vertices[v]);
-	for (var s in sides)
-	  this.Sides.push(sides[s]);
 
 	//finally go through our list of hexagons by their x co-ordinate to assign the y co-ordinate
 	for (var coOrd1 in HexagonsByXOrYCoOrd)
@@ -108,6 +130,19 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 			else
 				h.PathCoOrdX = coOrd2++;
 		}
+	}
+
+	for (var v in vertices)
+	  this.Vertices.push(vertices[v]);
+	for (var s in sides)
+	  this.Sides.push(sides[s]);
+	for (var h in hexes)
+	{
+	  var hex = hexes[h];
+	  hex.GridX = hex.PathCoOrdX;
+	  hex.GridY = hex.PathCoOrdY;
+	  if (cut == undefined || cut.indexOf(hex.PathCoOrdX+","+hex.PathCoOrdY) == -1)
+	    this.Hexes.push(hexes[h]);
 	}
 };
 
@@ -165,6 +200,17 @@ HT.Grid.prototype.GetHexById = function(id) {
 	for(var i in this.Hexes)
 	{
 		if(this.Hexes[i].Id == id)
+		{
+			return this.Hexes[i];
+		}
+	}
+	return null;
+};
+
+HT.Grid.prototype.GetHex = function(x, y) {
+	for(var i in this.Hexes)
+	{
+		if(this.Hexes[i].GridX == x && this.Hexes[i].GridY == y)
 		{
 			return this.Hexes[i];
 		}
