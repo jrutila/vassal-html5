@@ -1,9 +1,10 @@
 (function(Hex) {
-    Hex.Hex = Slot.extend({
+    var Slot = vassal.module('slot');
+    Hex.Hex = Slot.Slot.extend({
     });
-    Hex.Vertex = Slot.extend({
+    Hex.Vertex = Slot.Slot.extend({
     });
-    Hex.Side = Slot.extend({
+    Hex.Side = Slot.Slot.extend({
     });
 
     Hex.HexGrid = Backbone.Collection.extend({
@@ -12,6 +13,8 @@
       initialize: function(models, options) {
         this.xmax = options.xmax;
         this.ymax = options.ymax;
+        this.orientation = options.orientation;
+        this.cut = options.cut;
       },
       getNextHex: function(x, y) {
         if (this.hexiter == -1)
@@ -26,7 +29,7 @@
       }
     });
 
-    Hex.HexView = SlotView.extend({
+    Hex.HexView = Slot.SlotView.extend({
       tagName: 'div',
       className: 'slot hex',
       render: function() {
@@ -43,7 +46,7 @@
       },
     });
 
-    Hex.VertexView = SlotView.extend({
+    Hex.VertexView = Slot.SlotView.extend({
       tagName: 'div',
       className: 'slot vertex',
       render: function() {
@@ -58,7 +61,7 @@
       },
     });
 
-    Hex.SideView = SlotView.extend({
+    Hex.SideView = Slot.SlotView.extend({
       tagName: 'div',
       className: 'slot side',
       render: function() {
@@ -84,10 +87,17 @@
         var y = this.model.ymax;
         var width = this.$el.width();
         var height = this.$el.height();
-        HT.Hexagon.Static.WIDTH = Math.floor(width/(x/2+ratio*((x+1)/2)));
-        HT.Hexagon.Static.HEIGHT = Math.floor(height/(y+0.5));
-        HT.Hexagon.Static.SIDE = HT.Hexagon.Static.WIDTH*ratio;
-        //HT.Hexagon.Static.SIDE =0;
+        if (this.model.orientation == 'rotated')
+        {
+          HT.Hexagon.Static.WIDTH = Math.floor(width/x);
+          HT.Hexagon.Static.HEIGHT = Math.floor(height/(y/2+ratio*((y+1+y%2)/2)));
+          HT.Hexagon.Static.SIDE = HT.Hexagon.Static.WIDTH*ratio;
+          HT.Hexagon.Static.ORIENTATION = HT.Hexagon.Static.Rotated;
+        } else {
+          HT.Hexagon.Static.WIDTH = Math.floor(width/(x/2+ratio*((x+1+x%2)/2)));
+          HT.Hexagon.Static.HEIGHT = Math.floor(height/(y+0.5));
+          HT.Hexagon.Static.SIDE = HT.Hexagon.Static.WIDTH*ratio;
+        }
         var grid = new HT.Grid(this.$el.width(),this.$el.height());
         var ctx = this.el.getContext('2d');
         var img = new Image();
@@ -105,61 +115,63 @@
             return 1;
           return ax-bx;
         });
-        img.onload = function() {
-          ctx.drawImage(img, -20, -20);
-          for (var h in grid.Hexes) {
-            var hex = grid.Hexes[h];
-            var act_x = hex.PathCoOrdX+1;
-            var act_y = (hex.PathCoOrdY - Math.floor(hex.PathCoOrdX/2))+((hex.PathCoOrdX+1)%2);
-            var hexx = gridd.getNextHex(act_x, act_y);
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.strokeStyle = 'red';
-            ctx.moveTo(hex.Points[0].X, hex.Points[0].Y);
-            for(var i = 1; i < hex.Points.length; i++)
-            {
-              var p = hex.Points[i];
-              ctx.lineTo(p.X, p.Y);
-            }
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fillStyle = 'red';
-            ctx.font = 'bolder 8pt Trebuchet MS';
-            ctx.textAlign = 'center';
-            ctx.textBaseLine = 'middle';
-            var text = '';
-            var offset = -10;
-            ctx.fillText('('+hexx.get('x')+","+hexx.get('y')+')', hex.MidPoint.X, hex.MidPoint.Y+offset);
-            offset += 10;
-            _(hexx.get('parameters')).each(function(t) {
-              ctx.fillText(t, hex.MidPoint.X, hex.MidPoint.Y+offset);
-              offset += 10;
-            });
-            var hv = new Hex.HexView({
-              model: hexx,
-              point: hex.MidPoint,
-              hexgrid: hexgrid
-            });
-            hv.render();
+
+        for (var h in grid.Hexes) {
+          var hex = grid.Hexes[h];
+          if (this.model.cut.indexOf(hex.PathCoOrdX+","+hex.PathCoOrdY) == -1)
+          hex.draw(ctx);
+        }
+        /*
+          var act_x = hex.PathCoOrdX+1;
+          var act_y = (hex.PathCoOrdY - Math.floor(hex.PathCoOrdX/2))+((hex.PathCoOrdX+1)%2);
+          var hexx = gridd.getNextHex(act_x, act_y);
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.strokeStyle = 'red';
+          ctx.moveTo(hex.Points[0].X, hex.Points[0].Y);
+          for(var i = 1; i < hex.Points.length; i++)
+          {
+            var p = hex.Points[i];
+            ctx.lineTo(p.X, p.Y);
           }
-          for (var v in grid.Vertices) {
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fillStyle = 'red';
+          ctx.font = 'bolder 8pt Trebuchet MS';
+          ctx.textAlign = 'center';
+          ctx.textBaseLine = 'middle';
+          var text = '';
+          var offset = -10;
+          ctx.fillText('('+hexx.get('x')+","+hexx.get('y')+')', hex.MidPoint.X, hex.MidPoint.Y+offset);
+          offset += 10;
+          _(hexx.get('parameters')).each(function(t) {
+            ctx.fillText(t, hex.MidPoint.X, hex.MidPoint.Y+offset);
+            offset += 10;
+          });
+          var hv = new Hex.HexView({
+            model: hexx,
+            point: hex.MidPoint,
+            hexgrid: hexgrid
+          });
+          hv.render();
+        }
+        for (var v in grid.Vertices) {
             var vv = new Hex.VertexView({
               model: new Hex.Vertex(),
               point: grid.Vertices[v],
               hexgrid: hexgrid
             });
             vv.render();
-          }
-          for (var v in grid.Sides) {
-            var sv = new Hex.SideView({
-              model: new Hex.Side(),
-              point: grid.Sides[v],
-              hexgrid: hexgrid
-            });
-            sv.render();
-          }
         }
-        img.src = 'images/backdrop.png';
+        for (var v in grid.Sides) {
+          var sv = new Hex.SideView({
+            model: new Hex.Side(),
+            point: grid.Sides[v],
+            hexgrid: hexgrid
+          });
+          sv.render();
+        }
+        */
       }
     });
 })(vassal.module('hex'));
