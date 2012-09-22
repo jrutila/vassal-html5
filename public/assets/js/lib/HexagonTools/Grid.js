@@ -74,23 +74,47 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, orientation,
 			  var xplus = 0;
 			  var yplus = 0;
 			  vertices[h.Points[p].X + "," + h.Points[p].Y] = h.Points[p];
-			  switch(p)
+			  if (ORIENTATION == HT.Hexagon.Orientation.Normal)
 			  {
-			    case "5":
-			      yplus -= HEIGHT/2;
-			    case "4":
-			      xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
-			      yplus -= HEIGHT/4;
-			    case "3":
-			      xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
-			      yplus += HEIGHT/4;
-			    case "2":
-			      yplus += HEIGHT/2;
-			    case "1":
-			      xplus += HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
-			      yplus += HEIGHT/4;
-			    case "0":
-			      xplus += HT.Hexagon.Static.SIDE/2;
+			    switch(p)
+			    {
+			      case "5":
+			        yplus -= HEIGHT/2;
+			      case "4":
+			        xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			        yplus -= HEIGHT/4;
+			      case "3":
+			        xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			        yplus += HEIGHT/4;
+			      case "2":
+			        yplus += HEIGHT/2;
+			      case "1":
+			        xplus += HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			        yplus += HEIGHT/4;
+			      case "0":
+			        xplus += HT.Hexagon.Static.SIDE/2;
+			    }
+			  } else {
+			    switch(p)
+			    {
+			      case "5":
+			        yplus -= SIDE/2 + (HEIGHT-SIDE)/4;
+			        xplus += WIDTH/4;
+			      case "4":
+			        xplus -= WIDTH/4;
+			        yplus -= SIDE/2 + (HEIGHT-SIDE)/4;
+			      case "3":
+			        xplus -= WIDTH/2;
+			      case "2":
+			        xplus -= WIDTH/4;
+			        yplus += SIDE/2 + (HEIGHT-SIDE)/4;
+			      case "1":
+			        xplus += WIDTH/4;
+			        yplus += SIDE/2 + (HEIGHT-SIDE)/4;
+			      case "0":
+			        xplus += WIDTH/4;
+			        yplus += (HEIGHT-SIDE)/4;
+			    }
 			  }
 			  var point = new HT.Point(h.Points[0].X + xplus, h.Points[0].Y + yplus);
 			  var start = h.Points[p];

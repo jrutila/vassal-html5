@@ -73,36 +73,50 @@
       },
     });
 
-    Hex.HexTileView = Backbone.View.extend({
-      tagName: "img",
+    Hex.HexTileView = Map.MapTileView.extend({
+      tagName: "div",
       className: "maptile",
-      events: {
-        "click": "assign",
-      },
-      render: function() {
-        this.$el.attr("src", "http://www.mayfairgames.com/support/pics/jungle-l.gif");
+      initialize: function() {
+        this.model.on('change', this.draw, this);
+        this.paper = Raphael(this.el,this.options.settings.WIDTH, this.options.settings.HEIGHT);
         this.$el.width(this.options.settings.WIDTH);
         this.$el.height(this.options.settings.HEIGHT);
+        this.$el.attr('draggable', 'true');
+      },
+      render: function() {
+        if (this.image != undefined)
+          this.svgimage = this.paper.image(this.image.src,0,0,this.options.settings.WIDTH, this.options.settings.HEIGHT);
+        else
+        {
+          var width = this.options.settings.WIDTH;
+          var height = this.options.settings.HEIGHT;
+          var side = this.options.settings.SIDE;
+          var args = [width/2, 0, width, (height-side)/2, width, height-(height-side)/2,width/2,height,0,height-(height-side)/2, 0, (height-side)/2]
+          var svgpic = this.paper.path("M{0} {1}L{2} {3}L{4} {5}L{6} {7}L{8} {9}Z".format(args));
+        }
         this.$el.appendTo("body");
       },
       draw: function() {
-          var img = new Image();
           var hex = this.options.hex;
           if (_.isFunction(hex))
             hex = hex();
           var model = this.model;
           var ctx = this.options.ctx;
-          this.$el.hide();
-          img.onload = function() {
-            ctx.drawImage(img, hex.TopLeftPoint.X, hex.TopLeftPoint.Y, hex.settings.WIDTH, hex.settings.HEIGHT);
+          var drawInfo = function() {
             ctx.fillText('terrain = '+model.get('properties').get('terrain'), hex.MidPoint.X, hex.MidPoint.Y+30);
           };
-          img.src = this.$el.attr('src');
-      },
-      assign: function(e) {
-        this.model.set('x', 3);
-        this.model.set('y', 3);
-        this.draw();
+          this.$el.hide();
+          if (this.svgimage)
+          {
+            var img = new Image();
+            img.onload = function() {
+              ctx.drawImage(img, hex.TopLeftPoint.X, hex.TopLeftPoint.Y, hex.settings.WIDTH, hex.settings.HEIGHT);
+              drawInfo();
+            };
+            img.src = this.svgimage.attr('src');
+          } else {
+            drawInfo();
+          }
       },
     });
 
@@ -111,14 +125,16 @@
         this.offset_x = this.$el.position().left;
         this.offset_y = this.$el.position().top;
       },
+      events: {
+        'dragover': 'dragOver',
+        'drop': 'drop',
+      },
       render: function() {
         var orie = HT.Hexagon.Orientation.Normal;
         if (this.model.get('orientation') == "rotated")
           orie = HT.Hexagon.Orientation.Rotated;
-        var grid = new HT.Grid(this.$el.width(),this.$el.height(), this.model.get('xmax'), this.model.get('ymax'), orie, this.model.get('cut'));
+        this.grid = new HT.Grid(this.$el.width(),this.$el.height(), this.model.get('xmax'), this.model.get('ymax'), orie, this.model.get('cut'));
         var ctx = this.el.getContext('2d');
-        var gridd = this.model;
-        var hexgrid = this;
         /*
         gridd.models.sort(function(a,b) {
           var n = a.get('y') - b.get('y');
@@ -135,8 +151,8 @@
         */
 
         var tempsettings;
-        for (var h in grid.Hexes) {
-          var hex = grid.Hexes[h];
+        for (var h in this.grid.Hexes) {
+          var hex = this.grid.Hexes[h];
           hex.draw(ctx);
           var hextile = this.model.get('tiles').find(function(data) { return data.get('x') == hex.GridX && data.get('y') == hex.GridY; });
           if (hextile)
@@ -152,6 +168,7 @@
           }
           tempsettings = hex.settings;
         }
+        var grid = this.grid;
         this.model.get('tiles').each(function(tile) 
         {
           if (tile.get('x') == undefined || tile.get('y') == undefined)
@@ -199,6 +216,8 @@
           });
           hv.render();
         }
+        */
+        var hexgrid = this;
         for (var v in grid.Vertices) {
             var vv = new Hex.VertexView({
               model: new Hex.Vertex(),
@@ -215,7 +234,27 @@
           });
           sv.render();
         }
-        */
-      }
+      },
+      dragOver: function(e) {
+        var ev = e.originalEvent;
+        if (ev.preventDefault) {
+          ev.preventDefault();
+        }
+        return false;
+      },
+      drop: function(e) {
+        console.log('dropped');
+        var ev = e.originalEvent;
+        var hex = this.grid.GetHexAt(new HT.Point(ev.offsetX, ev.offsetY));
+        draggedTileView.model.set({x: hex.GridX}, {silent: true});
+        draggedTileView.model.set({y: hex.GridY});
+      },
     });
 })(vassal.module('hex'));
+String.prototype.format = function() {
+  var formatted = this;
+  for(arg in arguments) {
+    formatted = formatted.replace("{" + arg + "}", arguments[arg]);
+  }
+  return formatted;
+};

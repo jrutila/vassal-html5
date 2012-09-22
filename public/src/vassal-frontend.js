@@ -79,7 +79,7 @@ jQuery(function($) {
       parameters: { name: 'SU 1 Shock' }
     });
     var pv = new Piece.PieceView({
-      model: p
+      model: p,
     });
     pv.render();
     p = new Piece.Piece({
@@ -89,6 +89,7 @@ jQuery(function($) {
       model: p
     });
     pv.render();
+    p.save();
 });
 
 

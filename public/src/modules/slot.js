@@ -35,6 +35,8 @@ Slot.SlotView = Backbone.View.extend({
     });
   },
   dragOver: function(e) {
+    if (draggedView == undefined)
+      return true;
     console.log('over');
     var ev = e.originalEvent;
     if (! this.model.get('allow_stacking') && this.model.get('pieces').size() > 0)
@@ -50,6 +52,8 @@ Slot.SlotView = Backbone.View.extend({
     return false;
   },
   drop: function(e) {
+    if (draggedView == undefined)
+      return true;
     console.log('drop');
     var ev = e.originalEvent;
     if (ev.stopPropagation) {
@@ -61,5 +65,7 @@ Slot.SlotView = Backbone.View.extend({
     return false;
   },
 });
+
+draggedView = undefined;
 
 })(vassal.module('slot'));
