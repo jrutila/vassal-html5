@@ -1,14 +1,22 @@
 (function(Map) {
 var Piece = vassal.module('piece');
-Map.Map = Backbone.Model.extend({
-  initialize: function() {
-    this.set('tiles', new Map.TileCollection())
-  },
+Map.MapTile = Backbone.Model.extend({
 });
 Map.TileCollection = Backbone.Collection.extend({
   model: Map.MapTile
 });
-Map.MapTile = Backbone.Model.extend({
+Map.Map = Backbone.Model.extend({
+  initialize: function() {
+    //this.set('tiles', new Map.TileCollection())
+  },
+  defaults: {
+    tiles: new Map.TileCollection(),
+  },
+  parse: function(resp) {
+    console.log('parse map');
+    resp.tiles = new Map.TileCollection(resp.tiles);
+    return resp;
+  },
 });
 
 Map.MapTileView = Backbone.View.extend({

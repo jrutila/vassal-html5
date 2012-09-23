@@ -12,6 +12,7 @@
     });
 
     Hex.HexGrid = Map.Map.extend({
+      type: 'Hex.HexGrid',
       hexiter: 0,
       getNextHex: function(x, y) {
         if (this.hexiter == -1)
@@ -103,7 +104,7 @@
           var model = this.model;
           var ctx = this.options.ctx;
           var drawInfo = function() {
-            ctx.fillText('terrain = '+model.get('properties').get('terrain'), hex.MidPoint.X, hex.MidPoint.Y+30);
+            ctx.fillText('terrain = '+model.get('properties')['terrain'], hex.MidPoint.X, hex.MidPoint.Y+30);
           };
           this.$el.hide();
           if (this.svgimage)

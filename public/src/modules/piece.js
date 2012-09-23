@@ -1,5 +1,8 @@
 (function(Piece) {
   Piece.Piece = Backbone.Model.extend({
+    initialize: function() {
+      this.storage = new Offline.Storage('pieces', this);
+    },
     defaults: {
       slot: undefined
     },

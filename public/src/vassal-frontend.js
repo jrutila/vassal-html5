@@ -37,8 +37,9 @@ jQuery(function($) {
       hex_view.render();
     });
     */
+    var Game = vassal.module('game');
     var Hex = vassal.module('hex');
-    var grid = new Hex.HexGrid({
+    var gridmap = new Hex.HexGrid({
       xmax: 8,
       ymax: 7,
       orientation: "rotated",
@@ -49,6 +50,12 @@ jQuery(function($) {
         "10,6", "9,6", "9,5", "9,4"
       ]
     });
+    var game = new Game.Game({
+      id: "32b8c71d-dcf9-0b57-d471-072303e4db13",
+      map: gridmap,
+    });
+    game.fetch({ local: true});
+    /*
     var tile = new Hex.HexTile({
       x: 2,
       y: 0,
@@ -56,20 +63,21 @@ jQuery(function($) {
         terrain: "wood",
       }),
     });
-    grid.get('tiles').add(tile);
-    grid.get('tiles').add(new Hex.HexTile({
+    gridmap.get('tiles').add(tile);
+    gridmap.get('tiles').add(new Hex.HexTile({
       properties: new Properties({
         terrain: "wood",
       }),
     }));
-    grid.get('tiles').add(new Hex.HexTile({
+    gridmap.get('tiles').add(new Hex.HexTile({
       properties: new Properties({
         terrain: "wood",
       }),
     }));
+    */
     var grid_view = new Hex.HexGridView({
       el: $('#hexCanvas'),
-      model: grid,
+      model: game.get('map'),
     });
 
     grid_view.render();
@@ -89,7 +97,25 @@ jQuery(function($) {
       model: p
     });
     pv.render();
-    p.save();
+    var save = new SaveGrid({
+      model: game,
+    });
+    save.render();
 });
 
+var SaveGrid = Backbone.View.extend({
+  tagName: 'input',
+  events: {
+    'click': 'save',
+  },
+  render: function() {
+    this.$el.attr('type', 'submit');
+    this.$el.val('Save');
+    this.$el.appendTo('body');
+  },
+  save: function(e) {
+    console.log('saving!');
+    this.model.save();
+  },
+});
 
