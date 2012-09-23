@@ -1,0 +1,92 @@
+{
+    "map": {
+        "type": "Hex.HexGrid", 
+        "cut": [
+            "0,0", 
+            "0,1", 
+            "1,1", 
+            "2,1", 
+            "0,7", 
+            "0,6", 
+            "1,7", 
+            "2,8", 
+            "6,3", 
+            "4,2", 
+            "5,3", 
+            "6,4", 
+            "6,10", 
+            "6,9", 
+            "5,9", 
+            "4,9"
+        ], 
+        "orientation": "normal", 
+        "tiles": [
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 2,
+                "y": 2
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "x": 0,
+                "y": 2
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "x": 0,
+                "y": 4
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "x": 1,
+                "y": 6
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "x": 3,
+                "y": 8
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "x": 5,
+                "y": 8
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "x": 6,
+                "y": 7
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "x": 6,
+                "y": 5
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "x": 4,
+                "y": 3
+            }
+        ], 
+        "xmax": 7, 
+        "ymax": 8
+    } 
+}

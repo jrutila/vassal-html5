@@ -83,6 +83,8 @@
         this.$el.width(this.options.settings.WIDTH);
         this.$el.height(this.options.settings.HEIGHT);
         this.$el.attr('draggable', 'true');
+        // XXX: HACK remove!
+        this.image = this.model.get('image');
       },
       render: function() {
         if (this.image != undefined)
