@@ -1,6 +1,15 @@
 (function(Map) {
 var Piece = vassal.module('piece');
+var Token = vassal.module('token');
 Map.MapTile = Backbone.Model.extend({
+  defaults: {
+    tokens: new Token.TokenCollection(),
+  },
+  parse: function(resp) {
+    console.log("parse tile");
+    resp.tokens = new Token.TokenCollection(resp.tokens);
+    return resp;
+  },
 });
 Map.TileCollection = Backbone.Collection.extend({
   model: Map.MapTile
@@ -14,17 +23,24 @@ Map.Map = Backbone.Model.extend({
   },
   parse: function(resp) {
     console.log('parse map');
-    resp.tiles = new Map.TileCollection(resp.tiles);
+    var arr = new Map.TileCollection();
+    for (var i in resp.tiles)
+      arr.add(new Map.MapTile.prototype.parse(resp.tiles[i]));
+    resp.tiles = arr;
     return resp;
   },
 });
 
 Map.MapTileView = Backbone.View.extend({
   initialize: function() {
-    this.image = undefined;
+    this.tokens = []; // array of tokenviews
   },
   events: {
     'dragstart': 'dragStart',
+  },
+  render: function(offset) {
+    this.renderTile();
+    this.renderTokens();
   },
   dragStart: function(e) {
     var ev = e.originalEvent;

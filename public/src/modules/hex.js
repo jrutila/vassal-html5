@@ -1,6 +1,7 @@
 (function(Hex) {
     var Slot = vassal.module('slot');
     var Map = vassal.module('map');
+    var Token = vassal.module('token');
     Hex.Hex = Slot.Slot.extend({
     });
     Hex.Vertex = Slot.Slot.extend({
@@ -35,8 +36,6 @@
         this.$el.width(HT.Hexagon.Static.SIDE);
         this.$el.height(HT.Hexagon.Static.HEIGHT/2);
         this.$el.offset({
-          //top: this.options['hexgrid'].offset_y + (this.model.get('y')-1)*HT.Hexagon.Static.HEIGHT+(HT.Hexagon.Static.HEIGHT/2)*((this.model.get('x')+1)%2) + HT.Hexagon.Static.HEIGHT/4,
-          //left: this.options['hexgrid'].offset_x +(Math.floor(this.model.get('x')/2))*HT.Hexagon.Static.WIDTH + (Math.floor((this.model.get('x')-1)/2))*HT.Hexagon.Static.SIDE + (this.model.get('x')%2)*(HT.Hexagon.Static.WIDTH/2-HT.Hexagon.Static.SIDE/2)
           top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/4,
           left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/4,
         });
@@ -77,16 +76,19 @@
     Hex.HexTileView = Map.MapTileView.extend({
       tagName: "div",
       className: "maptile",
-      initialize: function() {
-        this.model.on('change', this.draw, this);
+      initialize: function(options) {
+        this.constructor.__super__.initialize.apply(this, [options]);
+        this.model.on('change', this.render, this);
         this.paper = Raphael(this.el,this.options.settings.WIDTH, this.options.settings.HEIGHT);
         this.$el.width(this.options.settings.WIDTH);
         this.$el.height(this.options.settings.HEIGHT);
         this.$el.attr('draggable', 'true');
         // XXX: HACK remove!
         this.image = this.model.get('image');
+        this.renderFirst();
+        this.model.get('tokens').each(this.addToken, this);
       },
-      render: function() {
+      renderFirst: function() {
         if (this.image != undefined)
           this.svgimage = this.paper.image(this.image.src,0,0,this.options.settings.WIDTH, this.options.settings.HEIGHT);
         else
@@ -97,7 +99,36 @@
           var args = [width/2, 0, width, (height-side)/2, width, height-(height-side)/2,width/2,height,0,height-(height-side)/2, 0, (height-side)/2]
           var svgpic = this.paper.path("M{0} {1}L{2} {3}L{4} {5}L{6} {7}L{8} {9}Z".format(args));
         }
+      },
+      renderTile: function() {
+        var os = this.options.offset();
+        if (os != null)
+        {
+          console.log('rendering tile');
+          this.$el.css('position', 'absolute');
+          this.$el.offset(os);
+        }
+        else
+          this.$el.css('position', 'relative');
         this.$el.appendTo("body");
+      },
+      addToken: function(token) {
+        console.log('adding token');
+        var $elm = this.$el;
+        var tview = new Token.TokenView({
+          model: token,
+          offset: function() { return $elm.offset(); },
+        });
+        this.tokens.push(tview);
+      },
+      renderTokens: function() {
+        _.each(this.tokens, function(token_view) {
+          var os = token_view.options.offset();
+          if (os != null)
+          {
+            token_view.$el.offset(os);
+          }
+        }, this);
       },
       draw: function() {
           var hex = this.options.hex;
@@ -127,36 +158,51 @@
       initialize: function() {
         this.offset_x = this.$el.position().left;
         this.offset_y = this.$el.position().top;
+
+        var orie = HT.Hexagon.Orientation.Normal;
+        if (this.model.get('orientation') == "rotated")
+          orie = HT.Hexagon.Orientation.Rotated;
+        this.grid = new HT.Grid(this.$el.width(),this.$el.height(), this.model.get('xmax'), this.model.get('ymax'), orie, this.model.get('cut'));
       },
       events: {
         'dragover': 'dragOver',
         'drop': 'drop',
       },
       render: function() {
-        var orie = HT.Hexagon.Orientation.Normal;
-        if (this.model.get('orientation') == "rotated")
-          orie = HT.Hexagon.Orientation.Rotated;
-        this.grid = new HT.Grid(this.$el.width(),this.$el.height(), this.model.get('xmax'), this.model.get('ymax'), orie, this.model.get('cut'));
-        var ctx = this.el.getContext('2d');
-        /*
-        gridd.models.sort(function(a,b) {
-          var n = a.get('y') - b.get('y');
-          if (n != 0)
-            return n;
-          var ax = parseInt(a.get('x'));
-          var bx = parseInt(b.get('x'));
-          if (ax%2 != 0 && bx%2 == 0)
-            return -1;
-          if (ax%2 == 0 && bx%2 != 0)
-            return 1;
-          return ax-bx;
-        });
-        */
+        this.drawBase(this.el.getContext('2d'));
+        console.log("rendering map hexgrid");
 
-        var tempsettings;
+        var settings = this.grid.Hexes[0].settings;
+        var grid = this.grid;
+        var $elm = this.$el;
+        this.model.get('tiles').each(function(tile) 
+        {
+          var tv = new Hex.HexTileView({
+            model: tile,
+            hex: function() { return grid.GetHex(tile.get('x'), tile.get('y')); },
+            settings: settings,
+            offset: function() {
+              if (tv.options.hex() == null)
+                return null;
+              return {
+                left: $elm.offset().left + tv.options.hex().TopLeftPoint.X,
+                top: $elm.offset().top + tv.options.hex().TopLeftPoint.Y
+              };
+            }
+          });
+          tv.render();
+        }, this);
+ 
+      },
+      drawBase: function(ctx) {
+        console.debug('drawing base');
         for (var h in this.grid.Hexes) {
           var hex = this.grid.Hexes[h];
           hex.draw(ctx);
+        }
+      },
+      draw: function() {
+        for (var h in this.grid.Hexes) {
           var hextile = this.model.get('tiles').find(function(data) { return data.get('x') == hex.GridX && data.get('y') == hex.GridY; });
           if (hextile)
           {
@@ -172,55 +218,7 @@
           tempsettings = hex.settings;
         }
         var grid = this.grid;
-        this.model.get('tiles').each(function(tile) 
-        {
-          if (tile.get('x') == undefined || tile.get('y') == undefined)
-          {
-            var tv = new Hex.HexTileView({
-              model: tile,
-              hex: function() { return grid.GetHex(tile.get('x'), tile.get('y')) },
-              settings: tempsettings,
-              ctx: ctx,
-            });
-            tv.render();
-          }
-        });
-        /*
-          var act_x = hex.PathCoOrdX+1;
-          var act_y = (hex.PathCoOrdY - Math.floor(hex.PathCoOrdX/2))+((hex.PathCoOrdX+1)%2);
-          var hexx = gridd.getNextHex(act_x, act_y);
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.strokeStyle = 'red';
-          ctx.moveTo(hex.Points[0].X, hex.Points[0].Y);
-          for(var i = 1; i < hex.Points.length; i++)
-          {
-            var p = hex.Points[i];
-            ctx.lineTo(p.X, p.Y);
-          }
-          ctx.closePath();
-          ctx.stroke();
-          ctx.fillStyle = 'red';
-          ctx.font = 'bolder 8pt Trebuchet MS';
-          ctx.textAlign = 'center';
-          ctx.textBaseLine = 'middle';
-          var text = '';
-          var offset = -10;
-          ctx.fillText('('+hexx.get('x')+","+hexx.get('y')+')', hex.MidPoint.X, hex.MidPoint.Y+offset);
-          offset += 10;
-          _(hexx.get('parameters')).each(function(t) {
-            ctx.fillText(t, hex.MidPoint.X, hex.MidPoint.Y+offset);
-            offset += 10;
-          });
-          var hv = new Hex.HexView({
-            model: hexx,
-            point: hex.MidPoint,
-            hexgrid: hexgrid
-          });
-          hv.render();
-        }
-        */
-        var hexgrid = this;
+       var hexgrid = this;
         for (var v in grid.Vertices) {
             var vv = new Hex.VertexView({
               model: new Hex.Vertex(),
