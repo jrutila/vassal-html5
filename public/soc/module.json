@@ -33,6 +33,7 @@
                 "properties": {
                     "terrain": "sea"
                 }, 
+                "image": { "src": "/soc/images/sea.png" },
                 "x": 0,
                 "y": 2
             }, 
@@ -40,6 +41,7 @@
                 "properties": {
                     "terrain": "sea"
                 }, 
+                "image": { "src": "/soc/images/sea.png" },
                 "x": 0,
                 "y": 4
             },
@@ -47,6 +49,7 @@
                 "properties": {
                     "terrain": "sea"
                 }, 
+                "image": { "src": "/soc/images/sea.png" },
                 "x": 1,
                 "y": 6
             },
@@ -54,6 +57,7 @@
                 "properties": {
                     "terrain": "sea"
                 }, 
+                "image": { "src": "/soc/images/sea.png" },
                 "x": 3,
                 "y": 8
             },
@@ -61,6 +65,7 @@
                 "properties": {
                     "terrain": "sea"
                 }, 
+                "image": { "src": "/soc/images/sea.png" },
                 "x": 5,
                 "y": 8
             },
@@ -68,6 +73,7 @@
                 "properties": {
                     "terrain": "sea"
                 }, 
+                "image": { "src": "/soc/images/sea.png" },
                 "x": 6,
                 "y": 7
             },
@@ -75,6 +81,7 @@
                 "properties": {
                     "terrain": "sea"
                 }, 
+                "image": { "src": "/soc/images/sea.png" },
                 "x": 6,
                 "y": 5
             },
@@ -82,8 +89,227 @@
                 "properties": {
                     "terrain": "sea"
                 }, 
+                "image": { "src": "/soc/images/sea.png" },
                 "x": 4,
                 "y": 3
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 3,
+                "y": 2
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 3,
+                "y": 2
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 3,
+                "y": 2
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 3,
+                "y": 2
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 3,
+                "y": 2
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 0,
+                "y": 3
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 0,
+                "y": 5
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 2,
+                "y": 7
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 4,
+                "y": 8
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 5,
+                "y": 4
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 6,
+                "y": 8
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 1,
+                "y": 2
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 6,
+                "y": 6
+            },
+            {
+                "properties": {
+                    "terrain": "forest"
+                }, 
+                "image": { "src": "/soc/images/forest.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "forest"
+                }, 
+                "image": { "src": "/soc/images/forest.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "forest"
+                }, 
+                "image": { "src": "/soc/images/forest.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "forest"
+                }, 
+                "image": { "src": "/soc/images/forest.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "pasture"
+                }, 
+                "image": { "src": "/soc/images/pasture.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "pasture"
+                }, 
+                "image": { "src": "/soc/images/pasture.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "pasture"
+                }, 
+                "image": { "src": "/soc/images/pasture.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "pasture"
+                }, 
+                "image": { "src": "/soc/images/pasture.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "brick"
+                }, 
+                "image": { "src": "/soc/images/brick.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "brick"
+                }, 
+                "image": { "src": "/soc/images/brick.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "brick"
+                }, 
+                "image": { "src": "/soc/images/brick.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "ore"
+                }, 
+                "image": { "src": "/soc/images/ore.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "ore"
+                }, 
+                "image": { "src": "/soc/images/ore.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "ore"
+                }, 
+                "image": { "src": "/soc/images/ore.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "wheat"
+                }, 
+                "image": { "src": "/soc/images/wheat.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "wheat"
+                }, 
+                "image": { "src": "/soc/images/wheat.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "wheat"
+                }, 
+                "image": { "src": "/soc/images/wheat.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "wheat"
+                }, 
+                "image": { "src": "/soc/images/wheat.png" }
+            },
+            {
+                "properties": {
+                    "terrain": "desert"
+                }, 
+                "image": { "src": "/soc/images/desert.png" }
             }
         ], 
         "xmax": 7, 
