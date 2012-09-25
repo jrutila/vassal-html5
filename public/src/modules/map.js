@@ -34,9 +34,8 @@ Map.Map = Backbone.Model.extend({
 Map.MapTileView = Backbone.View.extend({
   initialize: function() {
     this.tokens = []; // array of tokenviews
-  },
-  events: {
-    'dragstart': 'dragStart',
+    this.$el.draggable();
+    this.$el.data('backbone-view', this);
   },
   render: function(offset) {
     this.renderTile();
@@ -47,6 +46,9 @@ Map.MapTileView = Backbone.View.extend({
     console.log('tile drag start');
     ev.dataTransfer.effectAllowed = 'move';
     draggedTileView = this;
+  },
+  drop: function(e) {
+    console.log('dropped something on a maptile');
   },
 });
 

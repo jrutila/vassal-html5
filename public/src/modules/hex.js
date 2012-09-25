@@ -83,7 +83,7 @@
         this.$el.width(this.options.settings.WIDTH);
         this.$el.height(this.options.settings.HEIGHT);
         this.$el.attr('draggable', 'true');
-        // XXX: HACK remove!
+        // XXX: HACK move image to something else!
         this.image = this.model.get('image');
         this.renderFirst();
         this.model.get('tokens').each(this.addToken, this);
@@ -163,10 +163,11 @@
         if (this.model.get('orientation') == "rotated")
           orie = HT.Hexagon.Orientation.Rotated;
         this.grid = new HT.Grid(this.$el.width(),this.$el.height(), this.model.get('xmax'), this.model.get('ymax'), orie, this.model.get('cut'));
-      },
-      events: {
-        'dragover': 'dragOver',
-        'drop': 'drop',
+
+        this.$el.data('backbone-view', this);
+        this.$el.droppable({
+          drop: this.drop
+        });
       },
       render: function() {
         this.drawBase(this.el.getContext('2d'));
@@ -243,12 +244,19 @@
         }
         return false;
       },
-      drop: function(e) {
-        console.log('dropped');
-        var ev = e.originalEvent;
-        var hex = this.grid.GetHexAt(new HT.Point(ev.offsetX, ev.offsetY));
-        draggedTileView.model.set({x: hex.GridX}, {silent: true});
-        draggedTileView.model.set({y: hex.GridY});
+      drop: function(ev, ui) {
+        var left = ui.offset.left;
+        var top = ui.offset.top;
+        console.log('dropped to hexgrid '+left+" "+top);
+        var hex = $(this).data('backbone-view').grid.GetHexAt(new HT.Point(left, top));
+        if (hex == null)
+        {
+          ev.revert = true;
+          return false;
+        }
+        var model = $(ui.draggable).data('backbone-view').model;
+        model.set({x: hex.GridX}, {silent: true});
+        model.set({y: hex.GridY});
       },
     });
 })(vassal.module('hex'));
