@@ -113,38 +113,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "x": 3,
-                "y": 2
-            }, 
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 3,
-                "y": 2
-            }, 
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 3,
-                "y": 2
-            }, 
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 3,
-                "y": 2
-            }, 
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
                 "x": 0,
                 "y": 3
             }, 
