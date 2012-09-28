@@ -3960,7 +3960,10 @@ Sk.builtin.type = function(name, bases, dict)
         {
             var reprf = this.tp$getattr("__repr__");
             if (reprf !== undefined)
+            {
+                reprf.context = this;
                 return Sk.misceval.apply(reprf, undefined, undefined, undefined, []);
+            }
             var mod = dict.__module__;
             var cname = "";
             if (mod) cname = mod.v + ".";
@@ -4889,7 +4892,7 @@ Sk.misceval.apply = function(func, kwdict, varargseq, kws, args)
         // descriptors to create builtin.func's in other places.
 
         goog.asserts.assert(kws === undefined);
-        return func.apply(null, args);
+        return func.apply(func.context, args);
     }
     else
     {

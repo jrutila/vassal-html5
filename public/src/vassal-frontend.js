@@ -48,11 +48,74 @@ jQuery(function($) {
     pv.render();
 });
 
+Sk.configure({
+  syspath: ['assets/js/lib/skulpt/lib'],
+  read: function(filename) {
+    var r = $.ajax({
+      async: false,
+      url: filename,
+    });
+    if (r.status == 200)
+      return r.responseText;
+    else
+      throw 'Not found';
+  },
+});
+
+vassalObject = new Sk.builtin.type(null, null, {
+"__repr__": function() {
+  return this.$d.$r();
+}});
+
+Backbone.Model.prototype.merge = function(json) {
+  var changed = false;
+  for (var k in json)
+  {
+    console.log(k+" = "+json[k]);
+    if (this.has(k))
+    {
+      var oldv = this.get(k);
+      if (oldv.merge && oldv.merge(json[k]))
+      {
+        this.set(k, oldv);
+        changed = true;
+      }
+      else if (oldv != json[k])
+      {
+        this.set(k, json[k]);
+        changed = true;
+      }
+    } else {
+      this.set(k, json[k]);
+    }
+  }
+  return changed;
+};
+
+Backbone.Collection.prototype.merge = function(json) {
+  var changed = false;
+  for (var k in json)
+  {
+    var oldv = this.models[k];
+    if (oldv.merge && oldv.merge(json[k]))
+    {
+      changed = true;
+    }
+    else if (oldv != json[k])
+    {
+      this.remove(oldv);
+      this.push(json[k]);
+      changed = true;
+    }
+  }
+  return changed;
+};
+
 toSkulpt = function(obj) {
   var ret = null;
   if (obj.attributes != undefined)
   {
-    ret = new Sk.builtin.type(null, null, null)();
+    ret = vassalObject();
     for (var key in obj.attributes)
        ret.tp$setattr(key, toSkulpt(obj.attributes[key]));
   } else if (obj.models != undefined)
@@ -65,6 +128,16 @@ toSkulpt = function(obj) {
   } else if (obj.substring)
   {
     ret = Sk.builtin.str(obj.toString());
+  } else
+  {
+    var type = Sk.builtin.type(obj, undefined, undefined);
+    if (type == undefined)
+    {
+      ret = Sk.builtin.dict({});
+      for (var i in obj)
+        ret.mp$ass_subscript(toSkulpt(i), toSkulpt(obj[i]));
+    } else 
+      ret = obj;
   }
   return ret;
 };
@@ -75,5 +148,7 @@ $(document).ready(function() {
     func = module.tp$getattr('test');
     gg = toSkulpt(game);
     Sk.misceval.callsim(func, gg);
+    ggjson = JSON.parse(Sk.misceval.objectRepr(gg).v.replace(/'/g, '"'));
+    game.merge(ggjson);
   });
 });
