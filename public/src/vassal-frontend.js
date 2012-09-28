@@ -20,7 +20,7 @@ jQuery(function($) {
     var Hex = vassal.module('hex');
     $.getJSON('/soc/module.json')
       .success(function(data) {
-      var game = new Game.Game(Game.Game.prototype.parse(data));
+      game = new Game.Game(Game.Game.prototype.parse(data));
       var grid_view = new Hex.HexGridView({
         el: $('#hexCanvas'),
         model: game.get('map'),
@@ -46,4 +46,34 @@ jQuery(function($) {
       model: p
     });
     pv.render();
+});
+
+toSkulpt = function(obj) {
+  var ret = null;
+  if (obj.attributes != undefined)
+  {
+    ret = new Sk.builtin.type(null, null, null)();
+    for (var key in obj.attributes)
+       ret.tp$setattr(key, toSkulpt(obj.attributes[key]));
+  } else if (obj.models != undefined)
+  {
+    ret = new Sk.builtin.list([]);
+    for (var i = 0; i < obj.models.length; i++)
+    {
+      ret.v.push(toSkulpt(obj.models[i]));
+    }
+  } else if (obj.substring)
+  {
+    ret = Sk.builtin.str(obj.toString());
+  }
+  return ret;
+};
+
+$(document).ready(function() {
+  $.get('/soc/actions/test.py', function(data) {
+    var module = Sk.importMainWithBody('<stdin>', false, data);
+    func = module.tp$getattr('test');
+    gg = toSkulpt(game);
+    Sk.misceval.callsim(func, gg);
+  });
 });
