@@ -1,13 +1,37 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node app"
+  "name": "vassal-html5",
+  "version": "0.0.0",
+  "description": "Vassal HTML5 frontend",
+  "keywords": [
+    "Vassal"
+  ],
+  "author": {
+    "name": "Juho Rutila",
+    "email": "juho.rutila@gmail.com",
+    "url":  "https://github.com/jrutila"
   },
+  "homepage": "https://github.com/jrutila/vassal-html5",
+  "repository": {
+    "type": "git",
+    "url": "https://gitub.com/jrutila/vassal-html5"
+  },
+
+  "engines": {
+    "node": ">= 0.8.0",
+    "npm": ">= 1.0.0"
+  },
+
   "dependencies": {
     "express": "3.0.0rc4",
     "jade": "*",
     "stylus": "*"
+  },
+  "devDependencies": {},
+  "bundleDependencies": [],
+
+  "private": true,
+
+  "scripts": {  
+   "start": "node app.js"
   }
 }
