@@ -144,11 +144,17 @@ toSkulpt = function(obj) {
 
 $(document).ready(function() {
   $.get('/soc/actions/test.py', function(data) {
+    Action = vassal.module('action');
     var module = Sk.importMainWithBody('<stdin>', false, data);
     func = module.tp$getattr('test');
-    gg = toSkulpt(game);
-    Sk.misceval.callsim(func, gg);
-    ggjson = JSON.parse(Sk.misceval.objectRepr(gg).v.replace(/'/g, '"'));
-    game.merge(ggjson);
+    globalActionList = new Action.ActionList();
+    globalActionList.add(new Action.Action({
+      func: func,
+      name: 'Randomize board tiles',
+    }));
+    globalActions = new Action.GlobalActionView({
+      model: globalActionList,
+    });
+    globalActions.render();
   });
 });

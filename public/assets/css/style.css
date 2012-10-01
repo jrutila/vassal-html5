@@ -20,3 +20,8 @@ a {
 .maptile {
   position: absolute;
 }
+#globalActions {
+  position: absolute;
+  top: 0px;
+  left: 10px;
+}
