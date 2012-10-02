@@ -283,5 +283,13 @@
         ], 
         "xmax": 7, 
         "ymax": 8
-    } 
+    },
+    "pieces":
+    [
+      {
+        "properties": {
+          "name": "Town"
+        }
+      }
+    ]
 }

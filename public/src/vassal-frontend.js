@@ -18,7 +18,9 @@ Properties = Backbone.Model.extend({
 jQuery(function($) {
     var Game = vassal.module('game');
     var Hex = vassal.module('hex');
-    $.getJSON('/soc/module.json')
+    var Piece = vassal.module('piece');
+
+    $.getJSON('/afrika/module.json')
       .success(function(data) {
       game = new Game.Game(Game.Game.prototype.parse(data));
       var grid_view = new Hex.HexGridView({
@@ -27,25 +29,13 @@ jQuery(function($) {
       });
 
       grid_view.render();
+
+      var pb = new Piece.PieceBox({
+        model: game.get('pieces')
+      });
+      pb.render();
     })
       .error(function(data, xhr) { console.log('err'); console.log(data); console.log(xhr); });
-
-
-    var Piece = vassal.module('piece');
-    var p = new Piece.Piece({
-      parameters: { name: 'SU 1 Shock' }
-    });
-    var pv = new Piece.PieceView({
-      model: p,
-    });
-    pv.render();
-    p = new Piece.Piece({
-      parameters: { name: 'SU 2 Shock' }
-    });
-    pv = new Piece.PieceView({
-      model: p
-    });
-    pv.render();
 });
 
 Sk.configure({

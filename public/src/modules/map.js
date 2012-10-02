@@ -34,7 +34,9 @@ Map.Map = Backbone.Model.extend({
 Map.MapTileView = Backbone.View.extend({
   initialize: function() {
     this.tokens = []; // array of tokenviews
-    this.$el.draggable();
+    this.$el.draggable({
+      scope: 'map',
+    });
     this.$el.data('backbone-view', this);
   },
   render: function(offset) {

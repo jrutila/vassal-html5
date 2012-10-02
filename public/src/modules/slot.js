@@ -16,11 +16,12 @@ Slot.SlotView = Backbone.View.extend({
     allow_stacking: true,
   },
   initialize: function() {
+    this.$el.data('backbone-view', this);
     this.model.get('pieces').on('add remove', this.renderPieces, this);
-  },
-  events: {
-  'dragover': 'dragOver',
-  'drop': 'drop',
+    this.$el.droppable({
+      scope: 'piece',
+      drop: this.drop,
+    });
   },
   renderPieces: function(el, rel) {
     var vp = this._viewPointers;
@@ -34,35 +35,12 @@ Slot.SlotView = Backbone.View.extend({
       $piece.offset(offset);
     });
   },
-  dragOver: function(e) {
-    if (draggedView == undefined)
-      return true;
-    console.log('over');
-    var ev = e.originalEvent;
-    if (! this.model.get('allow_stacking') && this.model.get('pieces').size() > 0)
-      return true;
-    if (ev.preventDefault) {
-      ev.preventDefault();
-    }
-    draggedView.$el.offset(this.$el.offset());
-    ev.dataTransfer.dropEffect = 'move';
-    var thview = this;
-    draggedView.enddrag = function(e) { thview.drop(e); };
-
-    return false;
-  },
-  drop: function(e) {
-    if (draggedView == undefined)
-      return true;
-    console.log('drop');
-    var ev = e.originalEvent;
-    if (ev.stopPropagation) {
-      ev.stopPropagation();
-    }
-    var draggedModel = draggedView.model;
-    this._viewPointers[draggedModel.cid] = draggedView;
-    draggedModel.move(this.model);
-    return false;
+  drop: function(event, ui) {
+    console.log('dropped to slot');
+    var draggedView = $(ui.draggable).data("draggedView");
+    var me = $(this).data('backbone-view');
+    me._viewPointers[draggedView.model.cid] = draggedView
+    draggedView.model.move(me.model);
   },
 });
 

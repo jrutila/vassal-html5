@@ -1,0 +1,12 @@
+{
+    "map": {
+        "type": "Hex.HexGrid", 
+        "cut": [
+        ], 
+        "orientation": "normal", 
+        "image": { "src": "/afrika/images/map.png" },
+        "tiles": [], 
+        "xmax": 93, 
+        "ymax": 33
+    }
+}

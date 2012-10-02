@@ -32,12 +32,12 @@
       tagName: 'div',
       className: 'slot hex',
       render: function() {
-      	console.log('rendering!');
-        this.$el.width(HT.Hexagon.Static.SIDE);
-        this.$el.height(HT.Hexagon.Static.HEIGHT/2);
+      	console.log('rendering hex!');
+        this.$el.width(HT.Hexagon.Static.WIDTH/4);
+        this.$el.height(HT.Hexagon.Static.HEIGHT/4);
         this.$el.offset({
-          top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/4,
-          left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/4,
+          top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
+          left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
         });
         $('body').append(this.$el);
       },
@@ -166,6 +166,7 @@
 
         this.$el.data('backbone-view', this);
         this.$el.droppable({
+          scope: 'map',
           drop: this.drop
         });
       },
@@ -193,14 +194,48 @@
           });
           tv.render();
         }, this);
+
+/*
+        var hexgrid = this;
+        async.forEach(grid.Hexes, function(hex) {
+          var hh = new Hex.HexView({
+            model: new Hex.Hex(),
+            point: hex.MidPoint,
+            hexgrid: hexgrid
+          });
+          hh.render();
+        });
+        for (var v in grid.Vertices) {
+            var vv = new Hex.VertexView({
+              model: new Hex.Vertex(),
+              point: grid.Vertices[v],
+              hexgrid: this
+            });
+            vv.render();
+        }
+        for (var v in grid.Sides) {
+          var sv = new Hex.SideView({
+            model: new Hex.Side(),
+            point: grid.Sides[v],
+            hexgrid: this
+          });
+          sv.render();
+        }
+        */
  
       },
       drawBase: function(ctx) {
         console.debug('drawing base');
-        for (var h in this.grid.Hexes) {
-          var hex = this.grid.Hexes[h];
-          hex.draw(ctx);
-        }
+        var img = new Image();
+        var hexes = this.grid.Hexes;
+        img.onload = function() {
+          ctx.drawImage(this, 0, 0);
+          for (var h in hexes) {
+            var hex = hexes[h];
+            hex.draw(ctx);
+          }
+        };
+        img.src = this.model.get('image').src;
       },
       draw: function() {
         for (var h in this.grid.Hexes) {

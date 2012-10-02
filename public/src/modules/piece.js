@@ -14,26 +14,33 @@
       this.set('slot', slot);
       slot.get('pieces').add(this);
     },
+    parse: function(resp, xhr) {
+      return new Piece.Piece(resp);
+    },
   });
 
   Piece.PieceCollection = Backbone.Collection.extend({
-    model: Piece
+    model: Piece,
+    parse: function(resp, xhr) {
+      if (resp == undefined)
+        return resp;
+      var ret = new Piece.PieceCollection();
+      for (var i = 0; i < resp.length; i++)
+        ret.add(Piece.Piece.prototype.parse(resp[i]));
+      return ret;
+    },
   });
 
   Piece.PieceView = Backbone.View.extend({
     tagName: 'div',
     className: 'piece',
-    attributes: { 'draggable': 'true' },
-    events: {
-      "dragstart": 'dragStart',
-      "dragend": 'dragEnd',
-      'click': 'show_info',
-    },
     initialize: function() {
     },
     render: function() {
-      this.$el.html(this.model.get('parameters')['name']);
-      $('body').append(this.$el);
+      this.$el.html(this.model.get('properties')['name']);
+      this.$el.draggable({
+        scope: 'piece',
+      }).data("draggedView", this);
     },
     dragStart: function(e) {
       var ev = e.originalEvent;
@@ -75,4 +82,24 @@
      }
     },
   });
+
+  Piece.PieceBox = Backbone.View.extend({
+    model: Piece.PieceCollection,
+    tagName: "div",
+    render: function() {
+      this.$el.appendTo("body");
+      this.$el.width(200);
+      this.$el.height(300);
+      this.$el.css('top', '0px');
+      this.$el.css('right', '0px');
+      this.$el.css('background-color', '#47A347');
+      this.$el.css('position', 'absolute');
+      this.model.each(function(p) {
+        var pv = new Piece.PieceView({ model: p});
+        pv.render();
+        this.$el.append(pv.$el);
+      }, this);
+    },
+  });
+
 })(vassal.module('piece'));
