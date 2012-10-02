@@ -67,80 +67,10 @@ vassalObject = new Sk.builtin.type(null, null, {
   return this.$d.$r();
 }});
 
-Backbone.Model.prototype.merge = function(json) {
-  var changed = false;
-  for (var k in json)
-  {
-    console.log(k+" = "+json[k]);
-    if (this.has(k))
-    {
-      var oldv = this.get(k);
-      if (oldv.merge && oldv.merge(json[k]))
-      {
-        this.set(k, oldv);
-        changed = true;
-      }
-      else if (oldv != json[k])
-      {
-        this.set(k, json[k]);
-        changed = true;
-      }
-    } else {
-      this.set(k, json[k]);
-    }
-  }
-  return changed;
-};
+Backbone.Model.prototype.tp$getattr = Backbone.Model.prototype.get;
+Backbone.Model.prototype.tp$setattr = Backbone.Model.prototype.set;
 
-Backbone.Collection.prototype.merge = function(json) {
-  var changed = false;
-  for (var k in json)
-  {
-    var oldv = this.models[k];
-    if (oldv.merge && oldv.merge(json[k]))
-    {
-      changed = true;
-    }
-    else if (oldv != json[k])
-    {
-      this.remove(oldv);
-      this.push(json[k]);
-      changed = true;
-    }
-  }
-  return changed;
-};
-
-toSkulpt = function(obj) {
-  var ret = null;
-  if (obj.attributes != undefined)
-  {
-    ret = vassalObject();
-    for (var key in obj.attributes)
-       ret.tp$setattr(key, toSkulpt(obj.attributes[key]));
-  } else if (obj.models != undefined)
-  {
-    ret = new Sk.builtin.list([]);
-    for (var i = 0; i < obj.models.length; i++)
-    {
-      ret.v.push(toSkulpt(obj.models[i]));
-    }
-  } else if (obj.substring)
-  {
-    ret = Sk.builtin.str(obj.toString());
-  } else
-  {
-    var type = Sk.builtin.type(obj, undefined, undefined);
-    if (type == undefined)
-    {
-      ret = Sk.builtin.dict({});
-      for (var i in obj)
-        ret.mp$ass_subscript(toSkulpt(i), toSkulpt(obj[i]));
-    } else 
-      ret = obj;
-  }
-  return ret;
-};
+Backbone.Collection.prototype.mp$subscript = Backbone.Collection.prototype.at;
 
 $(document).ready(function() {
   $.get('/soc/actions/test.py', function(data) {

@@ -4,10 +4,7 @@ Action.Action = Backbone.Model.extend({
   func: undefined,
   name: '##action##',
   run: function(context) {
-    var _skulptModel = toSkulpt(context);
-    Sk.misceval.callsim(this.get('func'), _skulptModel);
-    _newJson = JSON.parse(Sk.misceval.objectRepr(_skulptModel).v.replace(/'/g, '"'));
-    context.merge(_newJson);
+    Sk.misceval.callsim(this.get('func'), context);
   },
 });
 
