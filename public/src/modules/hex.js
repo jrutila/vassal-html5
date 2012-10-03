@@ -162,7 +162,7 @@
         var orie = HT.Hexagon.Orientation.Normal;
         if (this.model.get('orientation') == "rotated")
           orie = HT.Hexagon.Orientation.Rotated;
-        this.grid = new HT.Grid(this.$el.width(),this.$el.height(), this.model.get('xmax'), this.model.get('ymax'), orie, this.model.get('cut'));
+        this.grid = new HT.Grid(this.model.get('width'), this.model.get('height'), this.model.get('xmax'), this.model.get('ymax'), this.model.get('x'), this.model.get('y'), orie, this.model.get('cut'), this.model.get('image').offset);
 
         this.$el.data('backbone-view', this);
         this.$el.droppable({

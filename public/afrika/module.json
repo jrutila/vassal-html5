@@ -4,9 +4,13 @@
         "cut": [
         ], 
         "orientation": "normal", 
-        "image": { "src": "/afrika/images/map.png" },
+        "image": { "src": "/afrika/images/map.png", "offset": { "x": 6, "y": -1 } },
         "tiles": [], 
+        "height": 3510,
+        "width": 8156,
         "xmax": 93, 
-        "ymax": 33
+        "ymax": 35,
+        "x": 0,
+        "y": 90
     }
 }

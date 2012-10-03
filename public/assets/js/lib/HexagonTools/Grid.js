@@ -2,7 +2,7 @@
  * A Grid is the model of the playfield containing hexes
  * @constructor
  */
-HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, orientation, cut) {
+HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, orientation, cut, offsetTune) {
 	
 	this.Hexes = [];
 	this.Vertices = [];
@@ -10,24 +10,28 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, orientation,
 	//setup a dictionary for use later for assigning the X or Y CoOrd (depending on Orientation)
 	var HexagonsByXOrYCoOrd = {}; //Dictionary<int, List<Hexagon>>
 
+        if (offsetTune == undefined)
+        {
+	  offsetTune = Object();
+	  offsetTune.x = 0;
+	  offsetTune.y = 0;
+	}
+
 	var row = 0;
-	var y = 0.0;
 	var vertices = {};
 	var sides = {};
 	var hexes = [];
         var ratio = 0.5;
-        var x = xmax;
-        var y = ymax;
         var settings = new HT.Hexagon.Settings();
         if (orientation == HT.Hexagon.Orientation.Rotated)
         {
-          WIDTH = Math.floor(width/x);
-          HEIGHT = Math.floor(height/(y/2+ratio*((y+1+y%2)/2)));
+          WIDTH = Math.floor(width/xmax);
+          HEIGHT = Math.floor(height/(ymax/2+ratio*((ymax+1+ymax%2)/2)));
           SIDE = HEIGHT*ratio;
           ORIENTATION = HT.Hexagon.Orientation.Rotated;
         } else {
-          WIDTH = Math.floor(width/(x/2+ratio*((x+1+x%2)/2)));
-          HEIGHT = Math.floor(height/(y+0.5));
+          WIDTH = width/(Math.ceil(xmax/2)+Math.floor(xmax/2)*ratio);
+          HEIGHT = Math.floor(height/ymax);
           SIDE = WIDTH*ratio;
           ORIENTATION = HT.Hexagon.Orientation.Normal;
         }
@@ -40,28 +44,49 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, orientation,
         settings.WIDTH = WIDTH;
         settings.ORIENTATION = ORIENTATION
         settings.SIDE = SIDE;
-	while (y + HEIGHT <= height)
+        settings.OFFSET = offsetTune;
+
+        console.log(ymax);
+        console.log(height);
+        console.log(HEIGHT);
+
+	var y = 0.0;
+        var colWhile = function(coly) {
+          return coly + HEIGHT <= height;
+        };
+        var colMove = function(coly) { return coly + HEIGHT / 2; };
+	if(ORIENTATION == HT.Hexagon.Orientation.Normal)
+		colMove = function(coly) { return coly + HEIGHT / 2; };
+	else
+		colMove = function(coly) { return coly + (HEIGHT - SIDE) / 2 + SIDE; };
+
+        y = height-HEIGHT;
+        colWhile = function(coly) { return coly - HEIGHT >= -HEIGHT; };
+        colMove = function(coly) { return coly - HEIGHT / 2; };
+
+        for (var i = 0; i <= ymax*2; i++)
 	{
 		var col = 0;
 
 		var offset = 0.0;
 		if (row % 2 == 1)
 		{
-			if(HT.Hexagon.Static.ORIENTATION == HT.Hexagon.Orientation.Normal)
-				offset = (HT.Hexagon.Static.WIDTH - HT.Hexagon.Static.SIDE)/2 + HT.Hexagon.Static.SIDE;
+			if(ORIENTATION == HT.Hexagon.Orientation.Normal)
+				offset = (WIDTH - SIDE)/2 + SIDE;
 			else
-				offset = HT.Hexagon.Static.WIDTH / 2;
+				offset = WIDTH / 2;
 			col = 1;
 		}
 		
 		var x = offset;
-		while (x + HT.Hexagon.Static.WIDTH <= width)
+		var target = Math.ceil(xmax/2)-col;
+                for (var j = 0; j < target; j++)
 		{
 		    var hexId = this.GetHexId(row, col);
-			var h = new HT.Hexagon(hexId, x, y, settings);
+			var h = new HT.Hexagon(hexId, x + offsetTune.x, y + offsetTune.y, settings);
 			
 			var pathCoOrd = col;
-			if(HT.Hexagon.Static.ORIENTATION == HT.Hexagon.Orientation.Normal)
+			if(ORIENTATION == HT.Hexagon.Orientation.Normal)
 				h.PathCoOrdX = col;//the column is the x coordinate of the hex, for the y coordinate we need to get more fancy
 			else {
 				h.PathCoOrdY = row;
@@ -81,18 +106,18 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, orientation,
 			      case "5":
 			        yplus -= HEIGHT/2;
 			      case "4":
-			        xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			        xplus -= SIDE/2 + (WIDTH-SIDE)/4;
 			        yplus -= HEIGHT/4;
 			      case "3":
-			        xplus -= HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			        xplus -= SIDE/2 + (WIDTH-SIDE)/4;
 			        yplus += HEIGHT/4;
 			      case "2":
 			        yplus += HEIGHT/2;
 			      case "1":
-			        xplus += HT.Hexagon.Static.SIDE/2 + (HT.Hexagon.Static.WIDTH-HT.Hexagon.Static.SIDE)/4;
+			        xplus += SIDE/2 + (WIDTH-SIDE)/4;
 			        yplus += HEIGHT/4;
 			      case "0":
-			        xplus += HT.Hexagon.Static.SIDE/2;
+			        xplus += SIDE/2;
 			    }
 			  } else {
 			    switch(p)
@@ -129,16 +154,13 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, orientation,
 			HexagonsByXOrYCoOrd[pathCoOrd].push(h);
 
 			col+=2;
-			if(HT.Hexagon.Static.ORIENTATION == HT.Hexagon.Orientation.Normal)
-				x += HT.Hexagon.Static.WIDTH + HT.Hexagon.Static.SIDE;
+			if(ORIENTATION == HT.Hexagon.Orientation.Normal)
+				x += WIDTH + SIDE;
 			else
-				x += HT.Hexagon.Static.WIDTH;
+				x += WIDTH;
 		}
 		row++;
-		if(HT.Hexagon.Static.ORIENTATION == HT.Hexagon.Orientation.Normal)
-			y += HEIGHT / 2;
-		else
-			y += (HEIGHT - HT.Hexagon.Static.SIDE)/2 + HT.Hexagon.Static.SIDE;
+		y = colMove(y);
 	}
 
 	//finally go through our list of hexagons by their x co-ordinate to assign the y co-ordinate
