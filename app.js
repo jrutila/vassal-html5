@@ -11,8 +11,13 @@ var express = require('express')
 
 var app = express();
 
+//  Get the environment variables we need.
+var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP;
+var port    = process.env.OPENSHIFT_INTERNAL_PORT || process.env.PORT || 3000;
+
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', port);
+  app.set('ipaddr', ipaddr);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
@@ -31,6 +36,6 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
+http.createServer(app).listen(app.get('port'), app.get('ipaddr'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
