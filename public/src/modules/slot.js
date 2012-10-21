@@ -7,6 +7,14 @@ Slot.Slot = Backbone.Model.extend({
   initialize: function() {
     var Piece = vassal.module('piece');
     this.set('pieces', new Piece.PieceCollection());
+    this.get('pieces').on('add', this.movePiece, this);
+  },
+  movePiece: function(piece) {
+    console.log("piece moved to slot");
+    var currentSlot = piece.get('slot');
+    if (currentSlot != undefined)
+      currentSlot.get('pieces').remove(piece);
+    piece.set('slot', this);
   },
 });
 
@@ -39,8 +47,8 @@ Slot.SlotView = Backbone.View.extend({
     console.log('dropped to slot');
     var draggedView = $(ui.draggable).data("draggedView");
     var me = $(this).data('backbone-view');
-    me._viewPointers[draggedView.model.cid] = draggedView
-    draggedView.model.move(me.model);
+    me._viewPointers[draggedView.model.cid] = draggedView;
+    me.model.get('pieces').add(draggedView.model);
   },
 });
 

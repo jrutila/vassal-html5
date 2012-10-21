@@ -17,7 +17,6 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, 
 	  offsetTune.y = 0;
 	}
 
-	var row = 0;
 	var vertices = {};
 	var sides = {};
 	var hexes = [];
@@ -50,20 +49,70 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, 
         console.log(height);
         console.log(HEIGHT);
 
-	var y = 0.0;
-        var colWhile = function(coly) {
-          return coly + HEIGHT <= height;
-        };
-        var colMove = function(coly) { return coly + HEIGHT / 2; };
+        var y = 0.0;
+        if (ydir == 90)
+          y = height-HEIGHT;
+        else
+	  y = 0.0;
+
+        var colMove = function(coly) { throw "NotImplemented"; };
 	if(ORIENTATION == HT.Hexagon.Orientation.Normal)
-		colMove = function(coly) { return coly + HEIGHT / 2; };
+	  if (ydir == 90)
+	    colMove = function(coly) { return coly - HEIGHT / 2; };
+	  else if (ydir == 315)
+	    colMove = function(coly) { return coly + HEIGHT / 2; };
 	else
 		colMove = function(coly) { return coly + (HEIGHT - SIDE) / 2 + SIDE; };
 
-        y = height-HEIGHT;
-        colWhile = function(coly) { return coly - HEIGHT >= -HEIGHT; };
-        colMove = function(coly) { return coly - HEIGHT / 2; };
+        var ordcut = {};
+        var lastcy = 0;
+        for (var c in cut)
+        {
+          var cx = parseInt(cut[c].split(',')[0]);
+          var cy = parseInt(cut[c].split(',')[1]);
+          cx = cx-1;
+          if (ydir == 90)
+            cy = Math.ceil((cx-1)/2)+(cy-(cx+1)%2)
+          else if (ydir == 315)
+            cy = cy-1;
+          if (!(cy in ordcut))
+            ordcut[cy] = [];
+          ordcut[cy].push(cx);
+          if (cy > lastcy)
+            lastcy = cy;
+        }
+        for (var c in ordcut)
+        {
+          ordcut[c].sort();
+        }
+        var iscut = function(x, y) {
+          if (ydir == 90)
+            if (y > lastcy)
+              return true;
+          if (y in ordcut)
+          {
+            var p = ordcut[y][0];
+            var cutting = true;
+            if (ydir == 90)
+              cutting = true;
+            else if (ydir == 315)
+              cutting = false;
+            for(var a = 0; a < ordcut[y].length; a++)
+            {
+              if (x == ordcut[y][a]) 
+                return true;
+              if (x < ordcut[y][a])
+                return cutting;
+              if (ordcut[y][a+1] - ordcut[y][a] > 1)
+                cutting = !cutting;
+            }
+          }
+          return false;
+        };
 
+        console.log(ordcut);
+
+	var row = 0;
         for (var i = 0; i <= ymax*2; i++)
 	{
 		var col = 0;
@@ -82,76 +131,88 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, 
 		var target = Math.ceil(xmax/2)-col;
                 for (var j = 0; j < target; j++)
 		{
+		    var skip = false;
 		    var hexId = this.GetHexId(row, col);
 			var h = new HT.Hexagon(hexId, x + offsetTune.x, y + offsetTune.y, settings);
 			
 			var pathCoOrd = col;
 			if(ORIENTATION == HT.Hexagon.Orientation.Normal)
-				h.PathCoOrdX = col;//the column is the x coordinate of the hex, for the y coordinate we need to get more fancy
+			{
+				h.PathCoOrdX = col;
+				h.PathCoOrdY = Math.floor(col/2)+Math.ceil(row/2);
+				h.GridX = col+1;
+				if (ydir == 90)
+				  h.GridY = Math.floor(row/2)+1;
+				else if (ydir == 315)
+				  h.GridY = Math.floor(col/2)+Math.ceil(row/2)+1;
+			}
 			else {
 				h.PathCoOrdY = row;
 				pathCoOrd = row;
 			}
-			
-			hexes.push(h);
-			for (var p in h.Points)
+
+			if (!iscut(h.PathCoOrdX, h.PathCoOrdY))
 			{
-			  var xplus = 0;
-			  var yplus = 0;
-			  vertices[h.Points[p].X + "," + h.Points[p].Y] = h.Points[p];
-			  if (ORIENTATION == HT.Hexagon.Orientation.Normal)
+			  hexes.push(h);
+			  for (var p in h.Points)
 			  {
-			    switch(p)
+			    var xplus = 0;
+			    var yplus = 0;
+			    vertices[h.Points[p].X + "," + h.Points[p].Y] = h.Points[p];
+			    if (ORIENTATION == HT.Hexagon.Orientation.Normal)
 			    {
-			      case "5":
-			        yplus -= HEIGHT/2;
-			      case "4":
-			        xplus -= SIDE/2 + (WIDTH-SIDE)/4;
-			        yplus -= HEIGHT/4;
-			      case "3":
-			        xplus -= SIDE/2 + (WIDTH-SIDE)/4;
-			        yplus += HEIGHT/4;
-			      case "2":
-			        yplus += HEIGHT/2;
-			      case "1":
-			        xplus += SIDE/2 + (WIDTH-SIDE)/4;
-			        yplus += HEIGHT/4;
-			      case "0":
-			        xplus += SIDE/2;
+			      switch(p)
+			      {
+			        case "5":
+			          yplus -= HEIGHT/2;
+			        case "4":
+			          xplus -= SIDE/2 + (WIDTH-SIDE)/4;
+			          yplus -= HEIGHT/4;
+			        case "3":
+			          xplus -= SIDE/2 + (WIDTH-SIDE)/4;
+			          yplus += HEIGHT/4;
+			        case "2":
+			          yplus += HEIGHT/2;
+			        case "1":
+			          xplus += SIDE/2 + (WIDTH-SIDE)/4;
+			          yplus += HEIGHT/4;
+			        case "0":
+			          xplus += SIDE/2;
+			      }
+			    } else {
+			      switch(p)
+			      {
+			        case "5":
+			          yplus -= SIDE/2 + (HEIGHT-SIDE)/4;
+			          xplus += WIDTH/4;
+			        case "4":
+			          xplus -= WIDTH/4;
+			          yplus -= SIDE/2 + (HEIGHT-SIDE)/4;
+			        case "3":
+			          xplus -= WIDTH/2;
+			        case "2":
+			          xplus -= WIDTH/4;
+			          yplus += SIDE/2 + (HEIGHT-SIDE)/4;
+			        case "1":
+			          xplus += WIDTH/4;
+			          yplus += SIDE/2 + (HEIGHT-SIDE)/4;
+			        case "0":
+			          xplus += WIDTH/4;
+			          yplus += (HEIGHT-SIDE)/4;
+			      }
 			    }
-			  } else {
-			    switch(p)
-			    {
-			      case "5":
-			        yplus -= SIDE/2 + (HEIGHT-SIDE)/4;
-			        xplus += WIDTH/4;
-			      case "4":
-			        xplus -= WIDTH/4;
-			        yplus -= SIDE/2 + (HEIGHT-SIDE)/4;
-			      case "3":
-			        xplus -= WIDTH/2;
-			      case "2":
-			        xplus -= WIDTH/4;
-			        yplus += SIDE/2 + (HEIGHT-SIDE)/4;
-			      case "1":
-			        xplus += WIDTH/4;
-			        yplus += SIDE/2 + (HEIGHT-SIDE)/4;
-			      case "0":
-			        xplus += WIDTH/4;
-			        yplus += (HEIGHT-SIDE)/4;
-			    }
+			    var point = new HT.Point(h.Points[0].X + xplus, h.Points[0].Y + yplus);
+			    var start = h.Points[p];
+			    var end = h.Points[parseInt(p)+1];
+			    if (end == undefined)
+			      end = h.Points[0];
+			    sides[start.X + "," + start.Y+","+end.X+","+end.Y] = point;
 			  }
-			  var point = new HT.Point(h.Points[0].X + xplus, h.Points[0].Y + yplus);
-			  var start = h.Points[p];
-			  var end = h.Points[parseInt(p)+1];
-			  if (end == undefined)
-			    end = h.Points[0];
-			  sides[start.X + "," + start.Y+","+end.X+","+end.Y] = point;
+			  
+			  if (!HexagonsByXOrYCoOrd[pathCoOrd])
+				  HexagonsByXOrYCoOrd[pathCoOrd] = [];
+			  HexagonsByXOrYCoOrd[pathCoOrd].push(h);
 			}
-			
-			if (!HexagonsByXOrYCoOrd[pathCoOrd])
-				HexagonsByXOrYCoOrd[pathCoOrd] = [];
-			HexagonsByXOrYCoOrd[pathCoOrd].push(h);
 
 			col+=2;
 			if(ORIENTATION == HT.Hexagon.Orientation.Normal)
@@ -164,6 +225,7 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, 
 	}
 
 	//finally go through our list of hexagons by their x co-ordinate to assign the y co-ordinate
+	/*
 	for (var coOrd1 in HexagonsByXOrYCoOrd)
 	{
 		var hexagonsByXOrY = HexagonsByXOrYCoOrd[coOrd1];
@@ -177,6 +239,7 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, 
 				h.PathCoOrdX = coOrd2++;
 		}
 	}
+	*/
 
 	for (var v in vertices)
 	  this.Vertices.push(vertices[v]);
@@ -185,9 +248,7 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, 
 	for (var h in hexes)
 	{
 	  var hex = hexes[h];
-	  hex.GridX = hex.PathCoOrdX;
-	  hex.GridY = hex.PathCoOrdY;
-	  if (cut == undefined || cut.indexOf(hex.PathCoOrdX+","+hex.PathCoOrdY) == -1)
+	  //if (cut == undefined || cut.indexOf(hex.PathCoOrdX+","+hex.PathCoOrdY) == -1)
 	    this.Hexes.push(hexes[h]);
 	}
 };

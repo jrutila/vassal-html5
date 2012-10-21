@@ -2,88 +2,52 @@
     "map": {
         "type": "Hex.HexGrid", 
         "cut": [
-            "0,0", 
-            "0,1", 
-            "1,1", 
-            "2,1", 
-            "0,7", 
-            "0,6", 
-            "1,7", 
-            "2,8", 
-            "6,3", 
-            "4,2", 
-            "5,3", 
-            "6,4", 
-            "6,10", 
-            "6,9", 
-            "5,9", 
-            "4,9"
+          "1,1",
+          "1,2",
+          "2,2",
+          "3,2",
+          "5,3",
+          "6,4",
+          "7,4",
+          "7,5",
+          "7,10",
+          "7,11",
+          "6,10",
+          "5,10",
+          "3,9",
+          "2,8",
+          "1,8",
+          "1,7"
         ], 
-        "orientation": "normal", 
+        "slots": [
+          "hex", "vertex", "side"
+        ],
         "tiles": [
             {
                 "properties": {
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "x": 2,
-                "y": 2
-            }, 
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 0,
-                "y": 2
-            }, 
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 0,
-                "y": 4
-            },
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
+                "tokens": [ { "properties" : { "trade": "any" } } ],
                 "x": 1,
-                "y": 6
-            },
+                "y": 3
+            }, 
             {
                 "properties": {
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
+                "x": 2,
+                "y": 3
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "tokens": [ { "properties" : { "trade": "wool" } } ],
                 "x": 3,
-                "y": 8
-            },
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 5,
-                "y": 8
-            },
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 6,
-                "y": 7
-            },
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 6,
-                "y": 5
+                "y": 3
             },
             {
                 "properties": {
@@ -98,30 +62,92 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "x": 3,
-                "y": 2
-            }, 
+                "tokens": [ { "properties" : { "trade": "any" } } ],
+                "x": 5,
+                "y": 4
+            },
             {
                 "properties": {
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "x": 0,
-                "y": 3
-            }, 
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 0,
+                "x": 6,
                 "y": 5
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "tokens": [ { "properties" : { "trade": "any" } } ],
+                "x": 7,
+                "y": 6
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 7,
+                "y": 7
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "tokens": [ { "properties" : { "trade": "brick" } } ],
+                "x": 7,
+                "y": 8
+            },
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 7,
+                "y": 9
             }, 
             {
                 "properties": {
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
+                "tokens": [ { "properties" : { "trade": "wood" } } ],
+                "x": 6,
+                "y": 9
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 5,
+                "y": 9
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "tokens": [ { "properties" : { "trade": "any" } } ],
+                "x": 4,
+                "y": 9
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "x": 3,
+                "y": 8
+            }, 
+            {
+                "properties": {
+                    "terrain": "sea"
+                }, 
+                "image": { "src": "/soc/images/sea.png" },
+                "tokens": [ { "properties" : { "trade": "wheat" } } ],
                 "x": 2,
                 "y": 7
             }, 
@@ -130,24 +156,17 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "x": 4,
-                "y": 8
+                "x": 1,
+                "y": 6
             }, 
             {
                 "properties": {
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "x": 5,
-                "y": 4
-            }, 
-            {
-                "properties": {
-                    "terrain": "sea"
-                }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 6,
-                "y": 8
+                "tokens": [ { "properties" : { "trade": "any" } } ],
+                "x": 1,
+                "y": 5
             }, 
             {
                 "properties": {
@@ -155,140 +174,211 @@
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
                 "x": 1,
-                "y": 2
-            }, 
+                "y": 4
+            },
             {
                 "properties": {
-                    "terrain": "sea"
+                    "terrain": "forest"
                 }, 
-                "image": { "src": "/soc/images/sea.png" },
-                "x": 6,
+                "image": { "src": "/soc/images/forest.png" },
+                "x": 2,
+                "y": 4
+            },
+            {
+                "properties": {
+                    "terrain": "forest"
+                }, 
+                "image": { "src": "/soc/images/forest.png" },
+                "x": 5,
                 "y": 6
             },
             {
                 "properties": {
                     "terrain": "forest"
                 }, 
-                "tokens": [ { "properties" : { "dicevalue": 8 } } ],
-                "image": { "src": "/soc/images/forest.png" }
+                "image": { "src": "/soc/images/forest.png" },
+                "x": 3,
+                "y": 6
             },
             {
                 "properties": {
                     "terrain": "forest"
                 }, 
-                "image": { "src": "/soc/images/forest.png" }
-            },
-            {
-                "properties": {
-                    "terrain": "forest"
-                }, 
-                "image": { "src": "/soc/images/forest.png" }
-            },
-            {
-                "properties": {
-                    "terrain": "forest"
-                }, 
-                "image": { "src": "/soc/images/forest.png" }
+                "image": { "src": "/soc/images/forest.png" },
+                "x": 6,
+                "y": 8
+
             },
             {
                 "properties": {
                     "terrain": "pasture"
                 }, 
-                "image": { "src": "/soc/images/pasture.png" }
+                "image": { "src": "/soc/images/pasture.png" },
+                "x": 3,
+                "y": 4
+
             },
             {
                 "properties": {
                     "terrain": "pasture"
                 }, 
-                "image": { "src": "/soc/images/pasture.png" }
+                "image": { "src": "/soc/images/pasture.png" },
+                "x": 5,
+                "y": 5
+
             },
             {
                 "properties": {
                     "terrain": "pasture"
                 }, 
-                "image": { "src": "/soc/images/pasture.png" }
+                "image": { "src": "/soc/images/pasture.png" },
+                "x": 5,
+                "y": 7
+
             },
             {
                 "properties": {
                     "terrain": "pasture"
                 }, 
-                "image": { "src": "/soc/images/pasture.png" }
+                "image": { "src": "/soc/images/pasture.png" },
+                "x": 4,
+                "y": 7
+
             },
             {
                 "properties": {
                     "terrain": "brick"
                 }, 
-                "image": { "src": "/soc/images/brick.png" }
+                "image": { "src": "/soc/images/brick.png" },
+                "x": 4,
+                "y": 5
+
             },
             {
                 "properties": {
                     "terrain": "brick"
                 }, 
-                "image": { "src": "/soc/images/brick.png" }
+                "image": { "src": "/soc/images/brick.png" },
+                "x": 2,
+                "y": 5
+
             },
             {
                 "properties": {
                     "terrain": "brick"
                 }, 
-                "image": { "src": "/soc/images/brick.png" }
+                "image": { "src": "/soc/images/brick.png" },
+                "x": 3,
+                "y": 7
+
             },
             {
                 "properties": {
                     "terrain": "ore"
                 }, 
-                "image": { "src": "/soc/images/ore.png" }
+                "image": { "src": "/soc/images/ore.png" },
+                "x": 3,
+                "y": 5
+
             },
             {
                 "properties": {
                     "terrain": "ore"
                 }, 
-                "image": { "src": "/soc/images/ore.png" }
+                "image": { "src": "/soc/images/ore.png" },
+                "x": 6,
+                "y": 7
+
             },
             {
                 "properties": {
                     "terrain": "ore"
                 }, 
-                "image": { "src": "/soc/images/ore.png" }
+                "image": { "src": "/soc/images/ore.png" },
+                "x": 4,
+                "y": 8
+
             },
             {
                 "properties": {
                     "terrain": "wheat"
                 }, 
-                "image": { "src": "/soc/images/wheat.png" }
+                "image": { "src": "/soc/images/wheat.png" },
+                "x": 4,
+                "y": 4
+
             },
             {
                 "properties": {
                     "terrain": "wheat"
                 }, 
-                "image": { "src": "/soc/images/wheat.png" }
+                "image": { "src": "/soc/images/wheat.png" },
+                "x": 6,
+                "y": 6
+
             },
             {
                 "properties": {
                     "terrain": "wheat"
                 }, 
-                "image": { "src": "/soc/images/wheat.png" }
+                "image": { "src": "/soc/images/wheat.png" },
+                "x": 5,
+                "y": 8
+
             },
             {
                 "properties": {
                     "terrain": "wheat"
                 }, 
-                "image": { "src": "/soc/images/wheat.png" }
+                "image": { "src": "/soc/images/wheat.png" },
+                "x": 4,
+                "y": 6
+
             },
             {
                 "properties": {
                     "terrain": "desert"
                 }, 
-                "image": { "src": "/soc/images/desert.png" }
+                "image": { "src": "/soc/images/desert.png" },
+                "x": 2,
+                "y": 6
+
             }
         ], 
+        "orientation": "normal", 
         "xmax": 7, 
-        "ymax": 8
+        "ymax": 7,
+        "x": 0,
+        "y": 315,
+        "height": 800,
+        "width": 800
     },
+    "tokens":
+    [
+      { "properties": {"dicevalue": 5, "sort": 0 } },
+      { "properties": {"dicevalue": 2, "sort": 1 } },
+      { "properties": {"dicevalue": 6, "sort": 2 } },
+      { "properties": {"dicevalue": 3, "sort": 3 } },
+      { "properties": {"dicevalue": 8, "sort": 4 } },
+      { "properties": {"dicevalue": 10, "sort": 5 } },
+      { "properties": {"dicevalue": 9, "sort": 6 } },
+      { "properties": {"dicevalue": 12, "sort": 7 } },
+      { "properties": {"dicevalue": 11, "sort": 8 } },
+      { "properties": {"dicevalue": 4, "sort": 9 } },
+      { "properties": {"dicevalue": 11, "sort": 10 } },
+      { "properties": {"dicevalue": 10, "sort": 11 } },
+      { "properties": {"dicevalue": 9, "sort": 12 } },
+      { "properties": {"dicevalue": 4, "sort": 13 } },
+      { "properties": {"dicevalue": 5, "sort": 14 } },
+      { "properties": {"dicevalue": 6, "sort": 15 } },
+      { "properties": {"dicevalue": 3, "sort": 16 } },
+      { "properties": {"dicevalue": 8, "sort": 17 } }
+    ],
     "pieces":
     [
       {
         "properties": {
-          "name": "Town"
+          "name": "Robber"
         }
       }
     ]

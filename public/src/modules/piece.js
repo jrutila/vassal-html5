@@ -1,18 +1,8 @@
 (function(Piece) {
+var Token = vassal.module('token');
   Piece.Piece = Backbone.Model.extend({
     initialize: function() {
       this.storage = new Offline.Storage('pieces', this);
-    },
-    defaults: {
-      slot: undefined
-    },
-    move: function(slot) {
-      console.log("moved");
-      var currentSlot = this.get('slot');
-      if (currentSlot != undefined)
-      	currentSlot.get('pieces').remove(this);
-      this.set('slot', slot);
-      slot.get('pieces').add(this);
     },
     parse: function(resp, xhr) {
       return new Piece.Piece(resp);
@@ -86,6 +76,12 @@
   Piece.PieceBox = Backbone.View.extend({
     model: Piece.PieceCollection,
     tagName: "div",
+    events: {
+      "click .hidebox": 'hide',
+    },
+    initialize: function() {
+      this.tokens = this.options['tokens'];
+    },
     render: function() {
       this.$el.appendTo("body");
       this.$el.width(200);
@@ -99,6 +95,16 @@
         pv.render();
         this.$el.append(pv.$el);
       }, this);
+      if (this.tokens != undefined)
+        this.tokens.each(function(t) {
+          var tv = new Token.TokenView({ model: t});
+          tv.render();
+          this.$el.append(tv.$el);
+        }, this);
+      this.$el.append('<div class="hidebox">X</div>')
+    },
+    hide: function() {
+      this.$el.hide();
     },
   });
 

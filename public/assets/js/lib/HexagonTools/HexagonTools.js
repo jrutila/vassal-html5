@@ -111,12 +111,22 @@ HT.Hexagon.prototype.draw = function(ctx) {
 	if(this.PathCoOrdX !== null && this.PathCoOrdY !== null && typeof(this.PathCoOrdX) != "undefined" && typeof(this.PathCoOrdY) != "undefined")
 	{
 		//draw co-ordinates for debugging
-		ctx.fillStyle = "black"
+		ctx.fillStyle = "gray"
 		ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
 		ctx.textAlign = "center";
 		ctx.textBaseline = 'middle';
 		//var textWidth = ctx.measureText(this.Planet.BoundingHex.Id);
 		ctx.fillText("("+this.PathCoOrdX+","+this.PathCoOrdY+")", this.MidPoint.X, this.MidPoint.Y + 10);
+	}
+	if(this.GridX !== null && this.GridY !== null && typeof(this.GridX) != "undefined" && typeof(this.GridY) != "undefined")
+	{
+		//draw co-ordinates for debugging
+		ctx.fillStyle = "black"
+		ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
+		ctx.textAlign = "center";
+		ctx.textBaseline = 'middle';
+		//var textWidth = ctx.measureText(this.Planet.BoundingHex.Id);
+		ctx.fillText("("+this.GridX+","+this.GridY+")", this.MidPoint.X, this.MidPoint.Y + 20);
 	}
 	
 	if(HT.Hexagon.Static.DRAWSTATS)

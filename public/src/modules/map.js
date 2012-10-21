@@ -37,20 +37,22 @@ Map.MapTileView = Backbone.View.extend({
     this.$el.draggable({
       scope: 'map',
     });
+    var me = this;
+    this.$el.droppable({
+      drop: function(ev, ui) { me.drop(ev, ui); }
+    });
     this.$el.data('backbone-view', this);
+    this.model.get('tokens').on('add', function(tok) { tok.moveTo(this.model); this.tokens.push(tok.get('backbone-view')); this.renderTokens(); }, this);
   },
   render: function(offset) {
     this.renderTile();
     this.renderTokens();
   },
-  dragStart: function(e) {
-    var ev = e.originalEvent;
-    console.log('tile drag start');
-    ev.dataTransfer.effectAllowed = 'move';
-    draggedTileView = this;
-  },
-  drop: function(e) {
+  drop: function(ev, ui) {
     console.log('dropped something on a maptile');
+    var view = $(ui.draggable).data('backbone-view');
+    view.model.moveTo(this.model);
+    this.renderTokens();
   },
 });
 

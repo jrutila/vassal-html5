@@ -36,8 +36,8 @@
         this.$el.width(HT.Hexagon.Static.WIDTH/4);
         this.$el.height(HT.Hexagon.Static.HEIGHT/4);
         this.$el.offset({
-          top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
-          left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
+          top: this.options['hexgrid'].$el.offset().top + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
+          left: this.options['hexgrid'].$el.offset().left + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
         });
         $('body').append(this.$el);
       },
@@ -51,8 +51,8 @@
         this.$el.width(HT.Hexagon.Static.WIDTH/4);
         this.$el.height(HT.Hexagon.Static.HEIGHT/4);
         this.$el.offset({
-          top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
-          left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
+          top: this.options['hexgrid'].$el.offset().top + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
+          left: this.options['hexgrid'].$el.offset().left + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
         });
         $('body').append(this.$el);
       },
@@ -66,8 +66,8 @@
         this.$el.width(HT.Hexagon.Static.WIDTH/4);
         this.$el.height(HT.Hexagon.Static.HEIGHT/4);
         this.$el.offset({
-          top: this.options['hexgrid'].offset_y + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
-          left: this.options['hexgrid'].offset_x + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
+          top: this.options['hexgrid'].$el.offset().top + this.options['point'].Y - HT.Hexagon.Static.HEIGHT/8,
+          left: this.options['hexgrid'].$el.offset().left + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
         });
         $('body').append(this.$el);
       },
@@ -117,17 +117,26 @@
         var $elm = this.$el;
         var tview = new Token.TokenView({
           model: token,
-          offset: function() { return $elm.offset(); },
         });
         this.tokens.push(tview);
       },
       renderTokens: function() {
+        console.log('rendering tokens');
+        xpl = 0;
         _.each(this.tokens, function(token_view) {
-          var os = token_view.options.offset();
+          if (token_view === undefined)
+            return;
+          var os = this.$el.offset();
+          os.left += this.$el.width()/5;
+          os.top += this.$el.height()/5;
           if (os != null)
           {
+            os.left += xpl;
+            os.top += xpl;
             token_view.$el.offset(os);
+            token_view.$el.css('z-index', parseInt(this.$el.css('z-index'))+1+xpl);
           }
+          xpl += 5;
         }, this);
       },
       draw: function() {
@@ -155,14 +164,28 @@
     });
 
     Hex.HexGridView = Backbone.View.extend({
+      tagName: "canvas",
       initialize: function() {
         this.offset_x = this.$el.position().left;
         this.offset_y = this.$el.position().top;
 
         var orie = HT.Hexagon.Orientation.Normal;
+        var image_offset = { x: 0, y: 0};
+        if (this.model.get('image') != undefined)
+          image_offset = this.model.get('image').offset;
         if (this.model.get('orientation') == "rotated")
           orie = HT.Hexagon.Orientation.Rotated;
-        this.grid = new HT.Grid(this.model.get('width'), this.model.get('height'), this.model.get('xmax'), this.model.get('ymax'), this.model.get('x'), this.model.get('y'), orie, this.model.get('cut'), this.model.get('image').offset);
+        this.grid = new HT.Grid(
+          this.model.get('width'),
+          this.model.get('height'),
+          this.model.get('xmax'),
+          this.model.get('ymax'),
+          this.model.get('x'),
+          this.model.get('y'),
+          orie,
+          this.model.get('cut'),
+          image_offset
+        );
 
         this.$el.data('backbone-view', this);
         this.$el.droppable({
@@ -171,8 +194,12 @@
         });
       },
       render: function() {
-        this.drawBase(this.el.getContext('2d'));
         console.log("rendering map hexgrid");
+ 
+        this.$el.attr('width', this.model.get('width'));
+        this.$el.attr('height', this.model.get('height'));
+        this.$el.appendTo('body');
+        this.drawBase(this.el.getContext('2d'));
 
         var settings = this.grid.Hexes[0].settings;
         var grid = this.grid;
@@ -195,47 +222,67 @@
           tv.render();
         }, this);
 
-/*
-        var hexgrid = this;
-        async.forEach(grid.Hexes, function(hex) {
-          var hh = new Hex.HexView({
-            model: new Hex.Hex(),
-            point: hex.MidPoint,
-            hexgrid: hexgrid
+        if (this.model.get('slots').indexOf('hex') > -1)
+        {
+          var hexgrid = this;
+          async.forEach(grid.Hexes, function(hex) {
+            var hh = new Hex.HexView({
+              model: new Hex.Hex(),
+              point: hex.MidPoint,
+              hexgrid: hexgrid
+            });
+            hh.render();
           });
-          hh.render();
-        });
-        for (var v in grid.Vertices) {
-            var vv = new Hex.VertexView({
-              model: new Hex.Vertex(),
-              point: grid.Vertices[v],
+        }
+        if (this.model.get('slots').indexOf('vertex') > -1)
+        {
+          for (var v in grid.Vertices) {
+              var vv = new Hex.VertexView({
+                model: new Hex.Vertex(),
+                point: grid.Vertices[v],
+                hexgrid: this
+              });
+              vv.render();
+          }
+        }
+        if (this.model.get('slots').indexOf('side') > -1)
+        {
+          for (var v in grid.Sides) {
+            var sv = new Hex.SideView({
+              model: new Hex.Side(),
+              point: grid.Sides[v],
               hexgrid: this
             });
-            vv.render();
+            sv.render();
+          }
         }
-        for (var v in grid.Sides) {
-          var sv = new Hex.SideView({
-            model: new Hex.Side(),
-            point: grid.Sides[v],
-            hexgrid: this
-          });
-          sv.render();
-        }
-        */
- 
       },
       drawBase: function(ctx) {
         console.debug('drawing base');
-        var img = new Image();
         var hexes = this.grid.Hexes;
-        img.onload = function() {
-          ctx.drawImage(this, 0, 0);
+        var drawHexes = function(ctx) {
           for (var h in hexes) {
             var hex = hexes[h];
             hex.draw(ctx);
           }
         };
-        img.src = this.model.get('image').src;
+        if (this.model.get('image') == undefined)
+        {
+          drawHexes(ctx);
+          return;
+        }
+        var img = new Image();
+        img.onload = function() {
+          ctx.drawImage(this, 0, 0);
+          drawHexes(ctx);
+        };
+        img.onerror = function() {
+          drawHexes(ctx);
+        };
+        if (this.model.get('image') != undefined)
+          img.src = this.model.get('image').src;
+        else
+          drawHexes(ctx);
       },
       draw: function() {
         for (var h in this.grid.Hexes) {
@@ -271,13 +318,6 @@
           });
           sv.render();
         }
-      },
-      dragOver: function(e) {
-        var ev = e.originalEvent;
-        if (ev.preventDefault) {
-          ev.preventDefault();
-        }
-        return false;
       },
       drop: function(ev, ui) {
         var left = ui.offset.left;

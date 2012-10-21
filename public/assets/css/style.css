@@ -11,14 +11,22 @@ a {
   z-index: 1000;
   width: 30px;
   height: 30px;
-  z-index: 1000;
+}
+.token {
+  position: absolute;
 }
 .slot {
   position: absolute;
-  z-index: 900;
+  z-index: 1900;
 }
 .maptile {
   position: absolute;
+  z-index: 500;
+}
+.hidebox {
+  position: absolute;
+  right: 0px;
+  top: 0px;
 }
 #globalActions {
   position: absolute;
