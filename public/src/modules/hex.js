@@ -137,6 +137,7 @@
             token_view.$el.css('z-index', parseInt(this.$el.css('z-index'))+1+xpl);
           }
           xpl += 5;
+          console.log('token rendered');
         }, this);
       },
       draw: function() {

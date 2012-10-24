@@ -12,4 +12,3 @@ def setup_tokens(game):
   ll = []
   for i in range(18, 37):
     game.map.tiles[i].tokens.append(game.tokens[i-18])
-    #ll.append(game.tokens[i-18])

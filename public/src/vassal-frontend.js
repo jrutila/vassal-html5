@@ -33,6 +33,10 @@ GameChooser = Backbone.View.extend({
   id: 'gameChooser',
   initialize: function() {
     this.games = [ 'soc', 'afrika' ];
+    if (localStorage.games != undefined)
+      _.each(localStorage.games.split(','), function(el) {
+        this.games.push(el);
+      }, this);
   },
   render: function() {
     for (var i = 0; i < this.games.length; i++)
@@ -41,27 +45,37 @@ GameChooser = Backbone.View.extend({
       this.$el.append($game);
       $game.click(function() {
         $(this).parent().hide();
-        $.getJSON('/'+$(this).html()+'/module.json')
-          .success(function(data) {
-          game = new Game.Game(Game.Game.prototype.parse(data));
-          var grid_view = new Hex.HexGridView({
-            model: game.get('map'),
-          });
-
-          grid_view.render();
-
-          var pb = new Piece.PieceBox({
-            model: game.get('pieces'),
-            tokens: game.get('tokens')
-          });
-          pb.render();
-        })
-          .error(function(data, xhr) { console.log('err'); console.log(data); console.log(xhr); });
-        
+        if ($(this).html() != 'soc' && $(this).html() != 'afrika')
+        {
+          game = new Game.Game({id: $(this).html()});
+          game.fetch();
+          init_game(game);
+        } else {
+          $.getJSON('/'+$(this).html()+'/module.json')
+            .success(function(data) {
+              game = new Game.Game(Game.Game.prototype.parse(data));
+              init_game(game);
+            })
+            .error(function(data, xhr) { console.log('err'); console.log(data); console.log(xhr); });
+        }
       });
     }
   },
 });
+
+init_game = function(ggame) {
+  var grid_view = new Hex.HexGridView({
+    model: game.get('map'),
+  });
+
+  grid_view.render();
+
+  var pb = new Piece.PieceBox({
+    model: game.get('pieces'),
+    tokens: game.get('tokens')
+  });
+  pb.render();
+};
 
 Sk.configure({
   syspath: ['assets/js/lib/skulpt/lib'],

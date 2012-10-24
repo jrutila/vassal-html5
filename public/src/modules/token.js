@@ -1,17 +1,19 @@
 (function(Token) {
 Token.Token = Backbone.Model.extend({
-  parent: undefined,
   moveTo: function(tokened) {
     console.log('moving token');
-    if (this.get('parent') != undefined)
-      this.get('parent').get('tokens').remove(this);
-    this.set('parent', tokened);
+    if (this.parent != undefined)
+      this.parent.get('tokens').remove(this);
+    //if (this.collection != undefined)
+      //this.collection.remove(this);
+    this.parent = tokened;
   },
   parse: function(resp, xhr) {
     resp['properties'] = new Backbone.Model(resp["properties"]);
     return resp
   },
 });
+
 Token.TokenCollection = Backbone.Collection.extend({
   model: Token.Token,
   parse: function(resp, xhr) {
@@ -32,19 +34,21 @@ Token.TokenView = Backbone.View.extend({
     this.paper = Raphael(this.el,50,50);
     this.renderFirst();
     this.$el.data('backbone-view', this);
-    this.model.set('backbone-view', this);
-    this.model.on('change:parent', function(tok) { tok.set('backbone-view', this); }, this);
+    this.model.tokenView = this;
   },
   renderFirst: function() {
     var svgcirc = this.paper.circle(25,25,25)
                       .attr({fill: "white"});
     var props = this.model.get('properties')
-    if (this.model.get('properties').attributes != undefined)
-      props = this.model.get('properties').attributes
-    for (var prop in props)
+    if (props != undefined)
     {
-      this.paper.text(25,10,props[prop]).attr({ "font-size": 16 });
-      break;
+      if (props.attributes != undefined)
+        props = props.attributes
+      for (var prop in props)
+      {
+        this.paper.text(25,10,props[prop]).attr({ "font-size": 16 });
+        break;
+      }
     }
     this.$el.appendTo('body');
     this.$el.draggable({ handle: 'circle' }).data('backbone-view', this);

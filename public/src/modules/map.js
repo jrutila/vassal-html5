@@ -42,7 +42,11 @@ Map.MapTileView = Backbone.View.extend({
       drop: function(ev, ui) { me.drop(ev, ui); }
     });
     this.$el.data('backbone-view', this);
-    this.model.get('tokens').on('add', function(tok) { tok.moveTo(this.model); this.tokens.push(tok.get('backbone-view')); this.renderTokens(); }, this);
+    this.model.get('tokens').on('add', function(tok) {
+      this.tokens.push(tok.tokenView);
+      tok.moveTo(this.model);
+      this.renderTokens();
+    }, this);
   },
   render: function(offset) {
     this.renderTile();
@@ -51,8 +55,7 @@ Map.MapTileView = Backbone.View.extend({
   drop: function(ev, ui) {
     console.log('dropped something on a maptile');
     var view = $(ui.draggable).data('backbone-view');
-    view.model.moveTo(this.model);
-    this.renderTokens();
+    this.model.get('tokens').add(view.model);
   },
 });
 
