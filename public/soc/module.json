@@ -381,5 +381,77 @@
           "name": "Robber"
         }
       }
+      ,
+      {
+        "properties": {
+          "name": "House"
+        },
+        "side": "blue"
+      }
+      ,
+      {
+        "properties": {
+          "name": "House"
+        },
+        "side": "blue"
+      }
+      ,
+      {
+        "properties": {
+          "name": "Road"
+        },
+        "side": "blue"
+      }
+      ,
+      {
+        "properties": {
+          "name": "Road"
+        },
+        "side": "blue"
+      }
+      ,
+      {
+        "properties": {
+          "name": "Road"
+        },
+        "side": "blue"
+      },
+      {
+        "properties": {
+          "name": "House"
+        },
+        "side": "red"
+      }
+      ,
+      {
+        "properties": {
+          "name": "House"
+        },
+        "side": "red"
+      }
+      ,
+      {
+        "properties": {
+          "name": "Road"
+        },
+        "side": "red"
+      }
+      ,
+      {
+        "properties": {
+          "name": "Road"
+        },
+        "side": "red"
+      }
+      ,
+      {
+        "properties": {
+          "name": "Road"
+        },
+        "side": "red"
+      }
+    ]
+    ,
+    "cards": [
     ]
 }

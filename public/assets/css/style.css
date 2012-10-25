@@ -7,7 +7,6 @@ a {
 }
 .piece {
   position: absolute;
-  background-color: #00f;
   z-index: 1000;
   width: 30px;
   height: 30px;

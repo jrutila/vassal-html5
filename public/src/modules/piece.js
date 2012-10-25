@@ -28,6 +28,13 @@ var Token = vassal.module('token');
     },
     render: function() {
       this.$el.html(this.model.get('properties')['name']);
+      if (this.model.get('side') != undefined)
+        this.$el.css('background-color', this.model.get('side'));
+      else
+      {
+        this.$el.css('background-color', 'black');
+        this.$el.css('color', 'white');
+      }
       this.$el.draggable({
         scope: 'piece',
       }).data("draggedView", this);
