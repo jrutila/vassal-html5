@@ -31,6 +31,17 @@ Map.Map = Backbone.Model.extend({
   },
 });
 
+Map.MapView = Backbone.View.extend({
+  setupArea: function() {
+    var area = this.model.get('area');
+    if (area != undefined)
+        Areas[area] = this;
+  },
+  renderPiece: function()
+  {
+  }
+});
+
 Map.MapTileView = Backbone.View.extend({
   initialize: function() {
     this.tokens = []; // array of tokenviews

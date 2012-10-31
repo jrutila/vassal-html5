@@ -127,6 +127,8 @@ Backbone.Collection.prototype.tp$getattr = function(key) {
   return undefined;
 };
 
+Areas = {};
+
 $(document).ready(function() {
   $.get('/soc/actions.py', function(data) {
     Action = vassal.module('action');

@@ -19,6 +19,7 @@
           "1,8",
           "1,7"
         ], 
+        "area": "gameboard",
         "slots": [
           "hex", "vertex", "side"
         ],
@@ -379,7 +380,8 @@
       {
         "properties": {
           "name": "Robber"
-        }
+        },
+        "location": { "area": "gameboard", "x": 2, "y": 6 }
       }
       ,
       {

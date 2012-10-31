@@ -2,12 +2,7 @@
     var Slot = vassal.module('slot');
     var Map = vassal.module('map');
     var Token = vassal.module('token');
-    Hex.Hex = Slot.Slot.extend({
-    });
-    Hex.Vertex = Slot.Slot.extend({
-    });
-    Hex.Side = Slot.Slot.extend({
-    });
+    var Piece = vassal.module('piece');
 
     Hex.HexTile = Map.MapTile.extend({
     });
@@ -28,7 +23,19 @@
       }
     });
 
-    Hex.HexView = Slot.SlotView.extend({
+    Hex.GridSlotView = Slot.SlotView.extend({
+        _renderPiece: function(piece_view, offset) {
+            var $piece = piece_view.$el;
+            var $slot = this.$el;
+            $piece.appendTo($slot);
+            var left = $slot.width()/2 - $piece.width()/2;
+            var top = $slot.height()/2 - $piece.height()/2;
+            $piece.css("top", top+"px");
+            $piece.css("left", left+"px");
+        },
+    });
+
+    Hex.HexView = Hex.GridSlotView.extend({
       tagName: 'div',
       className: 'slot hex',
       render: function() {
@@ -43,7 +50,7 @@
       },
     });
 
-    Hex.VertexView = Slot.SlotView.extend({
+    Hex.VertexView = Hex.GridSlotView.extend({
       tagName: 'div',
       className: 'slot vertex',
       render: function() {
@@ -58,7 +65,7 @@
       },
     });
 
-    Hex.SideView = Slot.SlotView.extend({
+    Hex.SideView = Hex.GridSlotView.extend({
       tagName: 'div',
       className: 'slot side',
       render: function() {
@@ -164,9 +171,10 @@
       },
     });
 
-    Hex.HexGridView = Backbone.View.extend({
+    Hex.HexGridView = Map.MapView.extend({
       tagName: "canvas",
       initialize: function() {
+        this.setupArea();
         this.offset_x = this.$el.position().left;
         this.offset_y = this.$el.position().top;
 
@@ -193,6 +201,19 @@
           scope: 'map',
           drop: this.drop
         });
+      },
+      renderPiece: function(piece_view) {
+        var loc = piece_view.model.get('location');
+        var slot = undefined;
+        if (loc.get('hextype') == undefined || loc.get('hextype') == "hex")
+        {
+          var hex = this.grid.GetHex(loc.get('x'), loc.get('y'));
+          slot = this.slots[hex.Id];
+        }
+        else if (loc.get('hextype') == "vertex" || loc.get('hextype') == "side")
+          slot = this.slots[loc.get('x')+","+loc.get('y')];
+        if (slot != undefined)
+          slot.renderPiece(piece_view);
       },
       render: function() {
         console.log("rendering map hexgrid");
@@ -223,37 +244,44 @@
           tv.render();
         }, this);
 
+        this.slots = {};
+
+        var hexgrid = this;
         if (this.model.get('slots').indexOf('hex') > -1)
         {
-          var hexgrid = this;
           async.forEach(grid.Hexes, function(hex) {
             var hh = new Hex.HexView({
-              model: new Hex.Hex(),
               point: hex.MidPoint,
-              hexgrid: hexgrid
+              hexgrid: hexgrid,
+              location: { "area": hexgrid.model.get("area"), "hextype": "hex", "x": hex.GridX, "y": hex.GridY }
             });
             hh.render();
-          });
+            hexgrid.slots[hex.Id] = hh;
+          }, this);
         }
         if (this.model.get('slots').indexOf('vertex') > -1)
         {
           for (var v in grid.Vertices) {
+              var vertex = grid.Vertices[v];
               var vv = new Hex.VertexView({
-                model: new Hex.Vertex(),
-                point: grid.Vertices[v],
-                hexgrid: this
+                point: vertex,
+                hexgrid: this,
+                location: { "area": hexgrid.model.get("area"), "hextype": "vertex", "x": vertex.X, "y": vertex.Y }
               });
+              hexgrid.slots[vertex.X+","+vertex.Y] = vv;
               vv.render();
           }
         }
         if (this.model.get('slots').indexOf('side') > -1)
         {
           for (var v in grid.Sides) {
+            var side = grid.Sides[v];
             var sv = new Hex.SideView({
-              model: new Hex.Side(),
-              point: grid.Sides[v],
-              hexgrid: this
+              point: side,
+              hexgrid: this,
+              location: { "area": hexgrid.model.get("area"), "hextype": "side", "x": side.X, "y": side.Y }
             });
+            hexgrid.slots[side.X+","+side.Y] = sv;
             sv.render();
           }
         }

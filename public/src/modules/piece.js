@@ -1,11 +1,23 @@
 (function(Piece) {
 var Token = vassal.module('token');
   Piece.Piece = Backbone.Model.extend({
+    location: undefined,
     initialize: function() {
       this.storage = new Offline.Storage('pieces', this);
     },
     parse: function(resp, xhr) {
+      if ('location' in resp)
+        resp['location'] = new Piece.PieceLocation(resp['location']);
       return new Piece.Piece(resp);
+    },
+  });
+
+  Piece.PieceLocation = Backbone.Model.extend({
+    area: "piecebox",
+    initialize: function() {
+      this.on("change", function() {
+        console.log("loc change");
+        });
     },
   });
 
@@ -25,8 +37,10 @@ var Token = vassal.module('token');
     tagName: 'div',
     className: 'piece',
     initialize: function() {
+      this.model.on("change:location", this.render, this);
     },
     render: function() {
+      console.log("render piece");
       this.$el.html(this.model.get('properties')['name']);
       if (this.model.get('side') != undefined)
         this.$el.css('background-color', this.model.get('side'));
@@ -38,6 +52,8 @@ var Token = vassal.module('token');
       this.$el.draggable({
         scope: 'piece',
       }).data("draggedView", this);
+      if (this.model.get('location'))
+        Areas[this.model.get('location').get('area')].renderPiece(this);
     },
     dragStart: function(e) {
       var ev = e.originalEvent;
@@ -99,8 +115,8 @@ var Token = vassal.module('token');
       this.$el.css('position', 'absolute');
       this.model.each(function(p) {
         var pv = new Piece.PieceView({ model: p});
-        pv.render();
         this.$el.append(pv.$el);
+        pv.render();
       }, this);
       if (this.tokens != undefined)
         this.tokens.each(function(t) {
