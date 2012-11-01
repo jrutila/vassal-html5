@@ -206,7 +206,8 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, 
 			    var end = h.Points[parseInt(p)+1];
 			    if (end == undefined)
 			      end = h.Points[0];
-			    sides[start.X + "," + start.Y+","+end.X+","+end.Y] = point;
+			      var angle = Math.round(Math.atan2(end.Y-start.Y, end.X-start.X) * 180/Math.PI);
+			    sides[start.X + "," + start.Y+","+end.X+","+end.Y] = new HT.Side(point.X, point.Y, angle);
 			  }
 			  
 			  if (!HexagonsByXOrYCoOrd[pathCoOrd])
@@ -251,6 +252,11 @@ HT.Grid = function(/*double*/ width, /*double*/ height, xmax, ymax, xdir, ydir, 
 	  //if (cut == undefined || cut.indexOf(hex.PathCoOrdX+","+hex.PathCoOrdY) == -1)
 	    this.Hexes.push(hexes[h]);
 	}
+};
+
+HT.Side = function(x, y, angle) {
+  this.MidPoint = new HT.Point(x, y);
+  this.Angle = angle;
 };
 
 HT.Grid.Static = {Letters:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'};

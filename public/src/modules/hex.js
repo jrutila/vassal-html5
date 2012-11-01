@@ -32,6 +32,7 @@
             var top = $slot.height()/2 - $piece.height()/2;
             $piece.css("top", top+"px");
             $piece.css("left", left+"px");
+            this._rotate($piece);
         },
     });
 
@@ -48,6 +49,9 @@
         });
         $('body').append(this.$el);
       },
+      _rotate: function($piece) {
+        $piece.css("-webkit-transform", "");
+      },
     });
 
     Hex.VertexView = Hex.GridSlotView.extend({
@@ -63,6 +67,9 @@
         });
         $('body').append(this.$el);
       },
+      _rotate: function($piece) {
+        $piece.css("-webkit-transform", "");
+      },
     });
 
     Hex.SideView = Hex.GridSlotView.extend({
@@ -77,6 +84,9 @@
           left: this.options['hexgrid'].$el.offset().left + this.options['point'].X - HT.Hexagon.Static.WIDTH/8,
         });
         $('body').append(this.$el);
+      },
+      _rotate: function($piece) {
+        $piece.css("-webkit-transform", "rotate("+this.options['angle']+"deg)");
       },
     });
 
@@ -277,11 +287,12 @@
           for (var v in grid.Sides) {
             var side = grid.Sides[v];
             var sv = new Hex.SideView({
-              point: side,
+              point: side.MidPoint,
               hexgrid: this,
-              location: { "area": hexgrid.model.get("area"), "hextype": "side", "x": side.X, "y": side.Y }
+              location: { "area": hexgrid.model.get("area"), "hextype": "side", "x": side.MidPoint.X, "y": side.MidPoint.Y },
+              angle: side.Angle,
             });
-            hexgrid.slots[side.X+","+side.Y] = sv;
+            hexgrid.slots[side.MidPoint.X+","+side.MidPoint.Y] = sv;
             sv.render();
           }
         }

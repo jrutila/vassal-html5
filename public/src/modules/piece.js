@@ -103,6 +103,7 @@ var Token = vassal.module('token');
       "click .hidebox": 'hide',
     },
     initialize: function() {
+      Areas["piecebox"] = this;
       this.tokens = this.options['tokens'];
     },
     render: function() {
