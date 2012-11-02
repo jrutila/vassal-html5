@@ -24,7 +24,7 @@
     });
 
     Hex.GridSlotView = Slot.SlotView.extend({
-        _renderPiece: function(piece_view, offset) {
+        _renderTo: function(piece_view, offset) {
             var $piece = piece_view.$el;
             var $slot = this.$el;
             $piece.appendTo($slot);
@@ -184,7 +184,7 @@
     Hex.HexGridView = Map.MapView.extend({
       tagName: "canvas",
       initialize: function() {
-        this.setupArea();
+        SetupArea(this);
         this.offset_x = this.$el.position().left;
         this.offset_y = this.$el.position().top;
 
@@ -212,7 +212,7 @@
           drop: this.drop
         });
       },
-      renderPiece: function(piece_view) {
+      renderTo: function(piece_view) {
         var loc = piece_view.model.get('location');
         var slot = undefined;
         if (loc.get('hextype') == undefined || loc.get('hextype') == "hex")
@@ -223,7 +223,7 @@
         else if (loc.get('hextype') == "vertex" || loc.get('hextype') == "side")
           slot = this.slots[loc.get('x')+","+loc.get('y')];
         if (slot != undefined)
-          slot.renderPiece(piece_view);
+          slot.renderTo(piece_view);
       },
       render: function() {
         console.log("rendering map hexgrid");

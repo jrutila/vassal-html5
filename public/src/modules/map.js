@@ -32,11 +32,6 @@ Map.Map = Backbone.Model.extend({
 });
 
 Map.MapView = Backbone.View.extend({
-  setupArea: function() {
-    var area = this.model.get('area');
-    if (area != undefined)
-        Areas[area] = this;
-  },
   renderPiece: function()
   {
   }
@@ -49,9 +44,6 @@ Map.MapTileView = Backbone.View.extend({
       scope: 'map',
     });
     var me = this;
-    this.$el.droppable({
-      drop: function(ev, ui) { me.drop(ev, ui); }
-    });
     this.$el.data('backbone-view', this);
     this.model.get('tokens').on('add', function(tok) {
       this.tokens.push(tok.tokenView);
@@ -62,11 +54,6 @@ Map.MapTileView = Backbone.View.extend({
   render: function(offset) {
     this.renderTile();
     this.renderTokens();
-  },
-  drop: function(ev, ui) {
-    console.log('dropped something on a maptile');
-    var view = $(ui.draggable).data('backbone-view');
-    this.model.get('tokens').add(view.model);
   },
 });
 

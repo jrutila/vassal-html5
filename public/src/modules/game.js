@@ -2,6 +2,7 @@
 var Hex = vassal.module('hex');
 var Piece = vassal.module('piece');
 var Token = vassal.module('token');
+var Card = vassal.module('card');
 
 Game.Game = Backbone.Model.extend({
   initialize: function() {
@@ -17,6 +18,7 @@ Game.Game = Backbone.Model.extend({
     resp.map = map;
     resp.pieces = Piece.PieceCollection.prototype.parse(resp.pieces);
     resp.tokens = Token.TokenCollection.prototype.parse(resp.tokens);
+    resp.decks = new Card.DeckCollection(resp.decks);
     return resp;
   },
 });

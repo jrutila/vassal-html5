@@ -1,5 +1,7 @@
 (function(Piece) {
 var Token = vassal.module('token');
+var Slot = vassal.module('slot');
+
   Piece.Piece = Backbone.Model.extend({
     location: undefined,
     initialize: function() {
@@ -7,17 +9,8 @@ var Token = vassal.module('token');
     },
     parse: function(resp, xhr) {
       if ('location' in resp)
-        resp['location'] = new Piece.PieceLocation(resp['location']);
+        resp['location'] = new Slot.Location(resp['location']);
       return new Piece.Piece(resp);
-    },
-  });
-
-  Piece.PieceLocation = Backbone.Model.extend({
-    area: "piecebox",
-    initialize: function() {
-      this.on("change", function() {
-        console.log("loc change");
-        });
     },
   });
 
@@ -50,10 +43,10 @@ var Token = vassal.module('token');
         this.$el.css('color', 'white');
       }
       this.$el.draggable({
-        scope: 'piece',
+        scope: 'slot',
       }).data("draggedView", this);
       if (this.model.get('location'))
-        Areas[this.model.get('location').get('area')].renderPiece(this);
+        Areas[this.model.get('location').get('area')].renderTo(this);
     },
     dragStart: function(e) {
       var ev = e.originalEvent;
@@ -103,8 +96,12 @@ var Token = vassal.module('token');
       "click .hidebox": 'hide',
     },
     initialize: function() {
-      Areas["piecebox"] = this;
+      SetupArea(this, "piecebox");
       this.tokens = this.options['tokens'];
+      this.$el.droppable({
+        drop: this.drop,
+        scope: 'slot'
+      });
     },
     render: function() {
       this.$el.appendTo("body");
@@ -116,8 +113,8 @@ var Token = vassal.module('token');
       this.$el.css('position', 'absolute');
       this.model.each(function(p) {
         var pv = new Piece.PieceView({ model: p});
-        this.$el.append(pv.$el);
         pv.render();
+        this.renderTo(pv);
       }, this);
       if (this.tokens != undefined)
         this.tokens.each(function(t) {
@@ -126,6 +123,16 @@ var Token = vassal.module('token');
           this.$el.append(tv.$el);
         }, this);
       this.$el.append('<div class="hidebox">X</div>')
+    },
+    renderTo: function(view) {
+      view.$el.css('top', '');
+      view.$el.css('left', '');
+      view.$el.appendTo(this.$el);
+    },
+    drop: function(ev, ui) {
+      console.log('dropped to piecebox');
+      var model = $(ui.draggable).data('draggedView').model;
+      model.set('location', new Slot.Location({'area': 'piecebox'}));
     },
     hide: function() {
       this.$el.hide();

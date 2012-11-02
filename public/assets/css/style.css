@@ -21,6 +21,10 @@ a {
   position: absolute;
   z-index: 500;
 }
+.card {
+  position: absolute;
+  z-index: 2000;
+}
 .hidebox {
   position: absolute;
   right: 0px;
