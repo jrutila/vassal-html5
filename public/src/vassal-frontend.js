@@ -18,6 +18,7 @@ Properties = Backbone.Model.extend({
 var Game = vassal.module('game');
 var Hex = vassal.module('hex');
 var Piece = vassal.module('piece');
+var Card = vassal.module('card');
 
 jQuery(function($) {
 
@@ -75,6 +76,13 @@ init_game = function(ggame) {
     tokens: game.get('tokens')
   });
   pb.render();
+
+  game.get('decks').each(function(deck) {
+    var dv = new Card.DeckView({
+      model: deck,
+    });
+    dv.render();
+  });
 };
 
 Sk.configure({
@@ -128,6 +136,11 @@ Backbone.Collection.prototype.tp$getattr = function(key) {
 };
 
 Areas = {};
+SetupArea = function(view) {
+  var area = view.model.get('area');
+  if (area != undefined)
+      Areas[area] = view;
+}
 
 $(document).ready(function() {
   $.get('/soc/actions.py', function(data) {

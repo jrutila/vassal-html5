@@ -454,6 +454,38 @@
       }
     ]
     ,
-    "cards": [
+    "decks":
+    [
+      {
+        "properties": { "name": "Advances" },
+        "area": "Advance deck",
+        "cards": [
+          {
+            "properties": {
+              "name": "knight"
+            }
+          },
+          {
+            "properties": {
+              "name": "knight"
+            }
+          },
+          {
+            "properties": {
+              "name": "knight"
+            }
+          },
+          {
+            "properties": {
+              "name": "knight"
+            }
+          },
+          {
+            "properties": {
+              "name": "knight"
+            }
+          }
+        ]
+      }
     ]
 }

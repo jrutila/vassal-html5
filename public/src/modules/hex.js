@@ -184,7 +184,7 @@
     Hex.HexGridView = Map.MapView.extend({
       tagName: "canvas",
       initialize: function() {
-        this.setupArea();
+        SetupArea(this);
         this.offset_x = this.$el.position().left;
         this.offset_y = this.$el.position().top;
 
