@@ -84,7 +84,7 @@ var Slot = vassal.module('slot');
       this.model.get('cards').on("add", this.makeTopCard, this);
     },
     render: function() {
-      this.$el.append('DECK OF CARDS '+this.model.get('properties').get('name'));
+      this.$el.append($('<span>'+this.model.get('properties').get('name')+'</span>'));
       this.$el.css('border', 'solid 3px black');
       this.$el.css('display', 'inline-block');
       this.$el.width(156);
@@ -133,6 +133,17 @@ var Slot = vassal.module('slot');
         dv.render();
         dv.$el.appendTo(this.$el);
       }, this);
+      this.$el.css('top', '0px');
+      this.$el.css('left', '250px');
+      var offset = this.$el.offset();
+      offset.top -= this.$el.height()+30;
+      this.$el.offset(offset);
+      this.$el.click(function() {
+        var top = 0;
+        if ($(this).offset().top == 0)
+          top = -1*($(this).height()+30);
+        $(this).animate({top: top}, 800);
+      });
     },
   });
 })(vassal.module('card'));
