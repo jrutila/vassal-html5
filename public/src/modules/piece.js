@@ -113,8 +113,8 @@ var Slot = vassal.module('slot');
       this.$el.css('position', 'absolute');
       this.model.each(function(p) {
         var pv = new Piece.PieceView({ model: p});
-        pv.render();
         this.renderTo(pv);
+        pv.render();
       }, this);
       if (this.tokens != undefined)
         this.tokens.each(function(t) {
