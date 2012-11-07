@@ -12,6 +12,9 @@ var Slot = vassal.module('slot');
         resp['location'] = new Slot.Location(resp['location']);
       return new Piece.Piece(resp);
     },
+    setLocation: function(location) {
+      this.set('location', new Slot.Location(location));
+    },
   });
 
   Piece.PieceCollection = Backbone.Collection.extend({
@@ -34,7 +37,8 @@ var Slot = vassal.module('slot');
     },
     render: function() {
       console.log("render piece");
-      this.$el.html(this.model.get('properties')['name']);
+      var prop = this.model.get('properties');
+      this.$el.html(prop.name);
       if (this.model.get('side') != undefined)
         this.$el.css('background-color', this.model.get('side'));
       else
@@ -92,6 +96,7 @@ var Slot = vassal.module('slot');
   Piece.PieceBox = Backbone.View.extend({
     model: Piece.PieceCollection,
     tagName: "div",
+    className: "piecebox",
     events: {
       "click .hidebox": 'hide',
     },
@@ -109,8 +114,6 @@ var Slot = vassal.module('slot');
       this.$el.height(300);
       this.$el.css('top', '0px');
       this.$el.css('right', '0px');
-      this.$el.css('background-color', '#47A347');
-      this.$el.css('position', 'absolute');
       this.model.each(function(p) {
         var pv = new Piece.PieceView({ model: p});
         this.renderTo(pv);

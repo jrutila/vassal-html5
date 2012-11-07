@@ -354,29 +354,26 @@
         "height": 800,
         "width": 800
     },
-    "tokens":
-    [
-      { "properties": {"dicevalue": 5, "sort": 0 } },
-      { "properties": {"dicevalue": 2, "sort": 1 } },
-      { "properties": {"dicevalue": 6, "sort": 2 } },
-      { "properties": {"dicevalue": 3, "sort": 3 } },
-      { "properties": {"dicevalue": 8, "sort": 4 } },
-      { "properties": {"dicevalue": 10, "sort": 5 } },
-      { "properties": {"dicevalue": 9, "sort": 6 } },
-      { "properties": {"dicevalue": 12, "sort": 7 } },
-      { "properties": {"dicevalue": 11, "sort": 8 } },
-      { "properties": {"dicevalue": 4, "sort": 9 } },
-      { "properties": {"dicevalue": 11, "sort": 10 } },
-      { "properties": {"dicevalue": 10, "sort": 11 } },
-      { "properties": {"dicevalue": 9, "sort": 12 } },
-      { "properties": {"dicevalue": 4, "sort": 13 } },
-      { "properties": {"dicevalue": 5, "sort": 14 } },
-      { "properties": {"dicevalue": 6, "sort": 15 } },
-      { "properties": {"dicevalue": 3, "sort": 16 } },
-      { "properties": {"dicevalue": 8, "sort": 17 } }
-    ],
     "pieces":
     [
+      { "properties": {"name": "5", "dicevalue": 5, "sort": 0 } },
+      { "properties": {"name": "2", "dicevalue": 2, "sort": 1 } },
+      { "properties": {"name": "6", "dicevalue": 6, "sort": 2 } },
+      { "properties": {"name": "3", "dicevalue": 3, "sort": 3 } },
+      { "properties": {"name": "8", "dicevalue": 8, "sort": 4 } },
+      { "properties": {"name": "10", "dicevalue": 10, "sort": 5 } },
+      { "properties": {"name": "9", "dicevalue": 9, "sort": 6 } },
+      { "properties": {"name": "12", "dicevalue": 12, "sort": 7 } },
+      { "properties": {"name": "11", "dicevalue": 11, "sort": 8 } },
+      { "properties": {"name": "4", "dicevalue": 4, "sort": 9 } },
+      { "properties": {"name": "11", "dicevalue": 11, "sort": 10 } },
+      { "properties": {"name": "10", "dicevalue": 10, "sort": 11 } },
+      { "properties": {"name": "9", "dicevalue": 9, "sort": 12 } },
+      { "properties": {"name": "4", "dicevalue": 4, "sort": 13 } },
+      { "properties": {"name": "5", "dicevalue": 5, "sort": 14 } },
+      { "properties": {"name": "6", "dicevalue": 6, "sort": 15 } },
+      { "properties": {"name": "3", "dicevalue": 3, "sort": 16 } },
+      { "properties": {"name": "8", "dicevalue": 8, "sort": 17 } },
       {
         "properties": {
           "name": "Robber"

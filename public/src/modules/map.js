@@ -8,6 +8,7 @@ Map.MapTile = Backbone.Model.extend({
   parse: function(resp) {
     console.log("parse tile");
     resp.tokens = new Token.TokenCollection(resp.tokens);
+    resp.properties = new Backbone.Model(resp.properties);
     return resp;
   },
 });

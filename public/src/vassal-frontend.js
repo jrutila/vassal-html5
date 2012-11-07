@@ -58,6 +58,26 @@ GameChooser = Backbone.View.extend({
               init_game(game);
             })
             .error(function(data, xhr) { console.log('err'); console.log(data); console.log(xhr); });
+          $.get('/soc/actions.py', function(data) {
+            Action = vassal.module('action');
+            var module = Sk.importMainWithBody('<stdin>', false, data);
+            globalActionList = new Action.ActionList();
+            for (pr in module.$d)
+            {
+              func = module.tp$getattr(pr);
+              if (func instanceof Sk.builtin.func)
+              {
+                globalActionList.add(new Action.Action({
+                  func: func,
+                  name: pr,
+                }));
+              }
+            }
+            globalActions = new Action.GlobalActionView({
+              model: globalActionList,
+            });
+            globalActions.render();
+          });
         }
       });
     }
@@ -100,7 +120,26 @@ vassalObject = new Sk.builtin.type(null, null, {
   return this.$d.$r();
 }});
 
-Backbone.Model.prototype.tp$getattr = Backbone.Model.prototype.get;
+Backbone.Model.prototype.tp$getattr = function(nameJS) {
+  var ret = this.get(nameJS);
+  if (ret != undefined)
+    return ret;
+  ret = this[nameJS];
+  if (ret != undefined)
+  {
+    var ctx = this;
+    var func = function() {
+      var args = new Array();
+      for (a in arguments) {
+        args.push(eval("("+arguments[a].$r().v+")"));
+      }
+      ret.apply(ctx, args);
+    };
+    return func;
+  }
+  return undefined;
+};
+
 Backbone.Model.prototype.tp$setattr = Backbone.Model.prototype.set;
 Backbone.Model.prototype.tp$str = function() { return Sk.builtin.str(this.cid); };
 
@@ -131,6 +170,13 @@ Backbone.Collection.prototype.tp$getattr = function(key) {
   return undefined;
 };
 
+String.prototype.__cmp__ = function(v, w) {
+  var eq = Sk.builtin.str(v).v == Sk.builtin.str(w).v;
+  if (eq)
+    return 0;
+  return -1;
+}
+
 Areas = {};
 SetupArea = function(view, area) {
   if (area == undefined)
@@ -140,24 +186,4 @@ SetupArea = function(view, area) {
 }
 
 $(document).ready(function() {
-  $.get('/soc/actions.py', function(data) {
-    Action = vassal.module('action');
-    var module = Sk.importMainWithBody('<stdin>', false, data);
-    globalActionList = new Action.ActionList();
-    for (pr in module.$d)
-    {
-      func = module.tp$getattr(pr);
-      if (func instanceof Sk.builtin.func)
-      {
-        globalActionList.add(new Action.Action({
-          func: func,
-          name: pr,
-        }));
-      }
-    }
-    globalActions = new Action.GlobalActionView({
-      model: globalActionList,
-    });
-    globalActions.render();
-  });
 });
