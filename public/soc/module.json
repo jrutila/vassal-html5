@@ -29,7 +29,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "any" } } ],
                 "x": 1,
                 "y": 3
             }, 
@@ -46,7 +45,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "wool" } } ],
                 "x": 3,
                 "y": 3
             },
@@ -63,7 +61,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "any" } } ],
                 "x": 5,
                 "y": 4
             },
@@ -80,7 +77,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "any" } } ],
                 "x": 7,
                 "y": 6
             },
@@ -97,7 +93,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "brick" } } ],
                 "x": 7,
                 "y": 8
             },
@@ -114,7 +109,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "wood" } } ],
                 "x": 6,
                 "y": 9
             }, 
@@ -131,7 +125,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "any" } } ],
                 "x": 4,
                 "y": 9
             }, 
@@ -148,7 +141,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "wheat" } } ],
                 "x": 2,
                 "y": 7
             }, 
@@ -165,7 +157,6 @@
                     "terrain": "sea"
                 }, 
                 "image": { "src": "/soc/images/sea.png" },
-                "tokens": [ { "properties" : { "trade": "any" } } ],
                 "x": 1,
                 "y": 5
             }, 
@@ -360,7 +351,7 @@
       { "properties": {"name": "2", "dicevalue": 2, "sort": 1 } },
       { "properties": {"name": "6", "dicevalue": 6, "sort": 2 } },
       { "properties": {"name": "3", "dicevalue": 3, "sort": 3 } },
-      { "properties": {"name": "8", "dicevalue": 8, "sort": 4 } },
+      { "properties": {"name": "8", "dicevalue": 8, "sort": 4 }, "image": { "src": "/soc/images/eight.png" } },
       { "properties": {"name": "10", "dicevalue": 10, "sort": 5 } },
       { "properties": {"name": "9", "dicevalue": 9, "sort": 6 } },
       { "properties": {"name": "12", "dicevalue": 12, "sort": 7 } },
@@ -374,6 +365,15 @@
       { "properties": {"name": "6", "dicevalue": 6, "sort": 15 } },
       { "properties": {"name": "3", "dicevalue": 3, "sort": 16 } },
       { "properties": {"name": "8", "dicevalue": 8, "sort": 17 } },
+      { "properties": {"name": "any", "trade": "any" }, "location": {"area": "gameboard", "x": 1, "y": 3 } },
+      { "properties": {"name": "wool", "trade": "wool" }, "location": {"area": "gameboard", "x": 3, "y": 3 } },
+      { "properties": {"name": "any", "trade": "any" }, "location": {"area": "gameboard", "x": 5, "y": 4 } },
+      { "properties": {"name": "any", "trade": "any" }, "location": {"area": "gameboard", "x": 7, "y": 6 } },
+      { "properties": {"name": "brick", "trade": "brick" }, "location": {"area": "gameboard", "x": 7, "y": 8 } },
+      { "properties": {"name": "wood", "trade": "wood" }, "location": {"area": "gameboard", "x": 6, "y": 9 } },
+      { "properties": {"name": "any", "trade": "any" }, "location": {"area": "gameboard", "x": 4, "y": 9 } },
+      { "properties": {"name": "wheat", "trade": "wheat" }, "location": {"area": "gameboard", "x": 2, "y": 7 } },
+      { "properties": {"name": "any", "trade": "any" }, "location": {"area": "gameboard", "x": 1, "y": 5 } },
       {
         "properties": {
           "name": "Robber"

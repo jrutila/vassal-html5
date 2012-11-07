@@ -6,6 +6,8 @@ var Slot = vassal.module('slot');
     location: undefined,
     initialize: function() {
       this.storage = new Offline.Storage('pieces', this);
+      if (this.get('image') != undefined)
+        this.set('image', new Backbone.Model(this.get('image')));
     },
     parse: function(resp, xhr) {
       if ('location' in resp)
@@ -34,21 +36,29 @@ var Slot = vassal.module('slot');
     className: 'piece',
     initialize: function() {
       this.model.on("change:location", this.render, this);
-    },
-    render: function() {
-      console.log("render piece");
       var prop = this.model.get('properties');
-      this.$el.html(prop.name);
-      if (this.model.get('side') != undefined)
-        this.$el.css('background-color', this.model.get('side'));
-      else
+      if (this.model.get('image') != undefined)
       {
-        this.$el.css('background-color', 'black');
-        this.$el.css('color', 'white');
+        var $img = $('<img></img>').attr('src', this.model.get('image').get('src')).attr('title', prop.name);
+        this.$el.append($img);
+      } else {
+        this.$el.html(prop.name);
+        if (this.model.get('side') != undefined)
+          this.$el.css('background-color', this.model.get('side'));
+        else
+        {
+          this.$el.css('background-color', 'black');
+          this.$el.css('color', 'white');
+        }
+        this.$el.css('width', '30px');
+        this.$el.css('height', '30px');
       }
       this.$el.draggable({
         scope: 'slot',
       }).data("draggedView", this);
+    },
+    render: function() {
+      console.log("render piece");
       if (this.model.get('location'))
         Areas[this.model.get('location').get('area')].renderTo(this);
     },
