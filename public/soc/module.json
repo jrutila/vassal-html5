@@ -419,35 +419,42 @@
         "properties": {
           "name": "House"
         },
-        "side": "red"
+        "side": "red",
+        "image": { "src": "soc/images/red_house.png" }
+
       }
       ,
       {
         "properties": {
           "name": "House"
         },
-        "side": "red"
+        "side": "red",
+        "image": { "src": "soc/images/red_house.png" }
+
       }
       ,
       {
         "properties": {
           "name": "Road"
         },
-        "side": "red"
+        "side": "red",
+        "image": { "src": "soc/images/red_road.png" }
       }
       ,
       {
         "properties": {
           "name": "Road"
         },
-        "side": "red"
+        "side": "red",
+        "image": { "src": "soc/images/red_road.png" }
       }
       ,
       {
         "properties": {
           "name": "Road"
         },
-        "side": "red"
+        "side": "red",
+        "image": { "src": "soc/images/red_road.png" }
       }
     ]
     ,
